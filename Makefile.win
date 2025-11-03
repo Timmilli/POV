@@ -1,0 +1,53 @@
+# Default variables (can be overridden by command line)
+DIR ?= blink
+FILE ?= blink
+
+SRC_DIR = $(DIR)
+BUILD_DIR = build
+LIB_DIR = C:/WinAVR-20200120/avr/include
+
+SRC = $(wildcard $(SRC_DIR)/*.c)
+OBJ = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC))
+ELF = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.elf, $(SRC))
+BIN = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.bin, $(SRC))
+
+MMCU = atmega328p
+
+# Default target
+default: all
+
+# Compile C source to object
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@echo Compiling $<
+	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
+	avr-gcc -mmcu=$(MMCU) -Os -c $< -o $@ -I$(LIB_DIR)
+
+# Link object to ELF
+$(BUILD_DIR)/%.elf: $(SRC_DIR)/%.c
+	@echo Linking $@
+	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
+	avr-gcc -mmcu=$(MMCU) -Os -o $@ $<
+
+# Convert ELF to binary
+$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
+	@echo Creating binary $@
+	avr-objcopy -O binary $< $@
+
+# Flash binary to MCU
+install: build $(BUILD_DIR)/$(FILE).bin
+	@echo Uploading firmware...
+	avrdude -p $(MMCU) -c usbasp -P COM4 -U flash:w:$(BUILD_DIR)/$(FILE).bin
+
+# Build everything
+build: _build $(BIN)
+
+# Create build directory
+_build:
+	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
+
+# Clean build output
+clear:
+	@if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
+
+# Alias for build
+all: build
