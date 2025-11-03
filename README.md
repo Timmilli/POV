@@ -4,7 +4,7 @@
 
 ## Team
 
-Anaelle Jaffré (ENSC)
+Anaelle Jaffré (ENSC) POV 52
 
 Nicolas Cornet (ENSC)
 
