@@ -43,7 +43,7 @@ void pwm(int clock_duration) {
   for (int _ = 0; _ < clock_duration; _++) {
     // OE on
     OE_ON;
-    _delay_us(100);
+    _delay_us(1000);
     // OE off
     OE_OFF;
     _delay_us(1);
