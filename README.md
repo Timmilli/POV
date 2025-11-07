@@ -6,6 +6,6 @@
 
 Anaelle Jaffré (ENSC) POV 52
 
-Nicolas Cornet (ENSC)
+Nicolas Cornet (ENSC) POV 17
 
 Guénaël Roger (Info) POV 53
