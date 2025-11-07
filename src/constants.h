@@ -18,6 +18,9 @@
 #ifndef MYUBRR
 #define MYUBRR F_CPU / 8 / BAUD - 1
 #endif
+#ifndef  HALL_SENSOR_PIN
+#define  HALL_SENSOR_PIN PD2
+#endif
 
 /*
  * Led specific constants
