@@ -11,9 +11,9 @@ void setup_led_driver_com() {
   DDRC |= (1 << PC1) | (1 << PC2); // OE / LE
 }
 
-void write_datastreak(int8_t powered_led_index) {
+void write_datastreak(uint16_t datastreak) {
   for (int i = 0; i < 16; i++) {
-    if ((1 << powered_led_index) & (1 << i)) {
+    if (datastreak & (1 << i)) {
       // SDI
       // turns on
       SDI_ON;
@@ -42,7 +42,7 @@ void pwm(int clock_duration) {
   for (int _ = 0; _ < clock_duration; _++) {
     // OE on
     OE_ON;
-    _delay_us(50);
+    _delay_us(100);
     // OE off
     OE_OFF;
     _delay_us(0.1);
@@ -54,21 +54,17 @@ int led_com_main(void) {
 
   setup_led_driver_com();
 
-  int8_t powered_led_index = 0;
+  uint16_t datastreak = 0;
 
   while (1) {
     pwm(500);
 
-    write_datastreak(powered_led_index);
-#ifndef USE_RANDOM
-    if (powered_led_index >= 16) {
-      powered_led_index = 0;
+    write_datastreak(datastreak);
+    if (datastreak >= 0b1111111111111111) {
+      datastreak = 0;
     } else {
-      powered_led_index++;
+      datastreak++;
     }
-#else
-    powered_led_index = rand() % 16;
-#endif
   }
   return 1;
 }
