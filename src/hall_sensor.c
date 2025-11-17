@@ -38,10 +38,8 @@ unsigned long micros(void)
 
 ISR (INT0_vect){
   unsigned long current_time = micros();
-  if(current_time-last_hall_call > 1000UL){ //Small cooldown
-    turning_speed = 1000000.0/(float)(current_time - last_hall_call);
-    last_hall_call = current_time;
-  }
+  turning_speed = 1000000.0/(float)(current_time - last_hall_call);
+  last_hall_call = current_time;
 }
 
 // Interrupt Service Routine for Timer0 overflow
@@ -79,7 +77,7 @@ float get_current_angle(){
 
 void setup_hall_sensor() {
   DDRD &= ~(1 << HALL_SENSOR_PIN);   // PD2 (entry)
-  EICRA |= (1 << ISC00);      // set INT0 to trigger on ANY logic change
+  EICRA |= (11 << ISC00);      // set INT0 to trigger on rising
   EIMSK |= (1 << INT0);       // Turns on INT0
   init_timer();
   sei();                      // turn on interrupts

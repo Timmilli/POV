@@ -1,5 +1,4 @@
 #include "constants.h"
-
 #include "led_com.h"
 #include <avr/io.h>
 #include <stdlib.h>
