@@ -1,5 +1,4 @@
 #include "constants.h"
-
 #include "led_com.h"
 #include <avr/io.h>
 #include <stdlib.h>
@@ -10,6 +9,9 @@ void setup_led_driver_com() {
   // Setup pins in writing mode
   DDRB |= (1 << PB3) | (1 << PB5); // SDI | CLK
   DDRC |= (1 << PC1) | (1 << PC2); // OE / LE
+
+  // Setup pins in reading mode
+  DDRD &= ~(1 << PD2); // HALL
 }
 
 void write_datastreak(uint16_t datastreak) {
@@ -55,16 +57,23 @@ int led_com_main(void) {
 
   setup_led_driver_com();
 
-  uint16_t datastreak = 0;
+  uint16_t datastreak = 0b1111110001111111;
+  int led_state = 1;
+  uint8_t magnet_state = PORTD & (1 << PD2);
 
+  write_datastreak(datastreak);
   while (1) {
-    pwm(500);
-
-    write_datastreak(datastreak);
-    if (datastreak == 0b1111111111111111) {
-      datastreak = 0;
-    } else {
-      datastreak++;
+    if (magnet_state != (PORTD & (1 << PD2))) {
+      led_state = ~led_state;
+      magnet_state = PORTD & (1 << PD2);
+    }
+    if (led_state) {
+      // OE on
+      OE_ON;
+      _delay_us(100);
+      // OE off
+      OE_OFF;
+      _delay_us(1);
     }
   }
   return 1;

@@ -1,53 +1,44 @@
-# Default variables (can be overridden by command line)
-DIR ?= blink
-FILE ?= blink
+FILE ?= main
 
-SRC_DIR = $(DIR)
+SRC_DIR = src
 BUILD_DIR = build
-LIB_DIR = C:/WinAVR-20200120/avr/include
 
-SRC = $(wildcard $(SRC_DIR)/*.c)
+LIB_DIR = /usr/lib/avr/include/
+INCLUDE_FLAGS = -I$(LIB_DIR)
+
+SRC = $(filter-out $(SRC_DIR)/$(FILE).c, $(wildcard $(SRC_DIR)/*.c))
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC))
 ELF = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.elf, $(SRC))
 BIN = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.bin, $(SRC))
+blabblaalblal:
+	echo blblal
+MMCU=atmega328p
 
-MMCU = atmega328p
+CFLAGS = -mmcu=${MMCU}
 
-# Default target
 default: all
 
-# Compile C source to object
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@echo Compiling $<
-	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
-	avr-gcc -mmcu=$(MMCU) -Os -c $< -o $@ -I$(LIB_DIR)
+	avr-gcc $(CFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 
-# Link object to ELF
-$(BUILD_DIR)/%.elf: $(SRC_DIR)/%.c
-	@echo Linking $@
-	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
-	avr-gcc -mmcu=$(MMCU) -Os -o $@ $<
+$(BUILD_DIR)/$(FILE).elf: $(OBJ)
+	avr-gcc $(CFLAGS) $(INCLUDE_FLAGS) -o $@ $(SRC_DIR)/$(FILE).c $^
 
-# Convert ELF to binary
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
-	@echo Creating binary $@
-	avr-objcopy -O binary $< $@
+	avr-objcopy -O ihex $< $@ 
 
-# Flash binary to MCU
 install: build $(BUILD_DIR)/$(FILE).bin
-	@echo Uploading firmware...
-	avrdude -p $(MMCU) -c usbasp -P COM4 -U flash:w:$(BUILD_DIR)/$(FILE).bin
+	avrdude -p atmega328p -c usbasp -U flash:w:$(BUILD_DIR)/$(FILE).bin:i
 
-# Build everything
-build: _build $(BIN)
+build: _build $(BUILD_DIR)/$(FILE).elf
 
-# Create build directory
 _build:
-	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
+	if not exist $(BUILD_DIR) mkdir $(BUILD_DIR) 
 
-# Clean build output
-clear:
-	@if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
+com: 
+	minicom -b 38400 -o -D /dev/ttyACM0
 
-# Alias for build
-all: build
+clean:
+	@if exist $(BUILD_DIR) rd /s /q $(BUILD_DIR)
+
+all: build install clean

@@ -1,4 +1,5 @@
 #include "constants.h"
 #include "led_com.h"
+#include "display.h"
 
-int main(void) { return led_com_main(); }
+int main(void) { return display_main(); }
