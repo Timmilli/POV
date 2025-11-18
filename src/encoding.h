@@ -1,22 +1,35 @@
 #ifndef __ENCODING_H__
 #define __ENCODING_H__
 
+#include "constants.h"
+
+#include <avr/io.h>
+
+#define NUMBER_OF_POSITIONS 120
+
 // Top left quarter
-#define C1N0 0b0000
-#define C1N1 0b0000
-#define C1N2 0b0001
+const uint16_t c1n0[NUMBER_OF_POSITIONS] PROGMEM = {0b0101011010100101011,
+                                                    0b0101011010100101011};
+#define C1N0 c1n0
+
+const uint16_t c1n1[NUMBER_OF_POSITIONS] PROGMEM = {0b0101011010100101011,
+                                                    0b0101011010100101011};
+#define C1N1 c1n1
+
+const uint16_t c1n2[NUMBER_OF_POSITIONS] PROGMEM = {0b0101011010100101011};
+#define C1N2 c1n2
 
 // Top right quarter
-#define C2N0 0b0010
-#define C2N1 0b0011
-#define C2N2 0b0100
-#define C2N3 0b0101
-#define C2N4 0b0110
-#define C2N5 0b0111
-#define C2N6 0b1000
-#define C2N7 0b1001
-#define C2N8 0b1010
-#define C2N9 0b1011
+#define C2N0 c1n2
+#define C2N1 c1n2
+#define C2N2 c1n2
+#define C2N3 c1n2
+#define C2N4 c1n2
+#define C2N5 c1n2
+#define C2N6 c1n2
+#define C2N7 c1n2
+#define C2N8 c1n2
+#define C2N9 c1n2
 
 // Bottom left quarter
 #define C3N0 0b1100

@@ -11,22 +11,22 @@ void clock_update();
  * Update the clock, to now!
  */
 
-void clock_set_time(long s,long min,long h);
-/** 
+void clock_set_time(uint32_t s, uint32_t min, uint32_t h);
+/**
  * Set up the current time of the clock
-**/
+ **/
 
-long clock_get_seconds();
+uint32_t clock_get_seconds();
 /**
  * Get the seconds of the clock
  */
 
-long clock_get_minutes();
+uint32_t clock_get_minutes();
 /**
  * Get the minutes of the clock
  */
 
-long clock_get_hours();
+uint32_t clock_get_hours();
 /**
  * Get the hours of the clock
  */
