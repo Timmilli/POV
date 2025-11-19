@@ -11,16 +11,22 @@ ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
 uint16_t datastreak = 0b1111100000011111;
 
+/**
+ * Receiving interrupt function
+ */
 ISR(USART_RX_vect) {
   if (!ring_buffer_is_full(&rx_buffer))
     uart_read_byte(&rx_buffer);
 }
 
+/**
+ * Sending interrupt function
+ */
 ISR(USART_UDRE_vect) {
   if (ring_buffer_available_bytes(&tx_buffer) > 0)
     uart_send_byte(&tx_buffer);
   else
-    UDRIE_INTERRUPT_OFF; // interrupt on data register empty
+    UDRIE_INTERRUPT_OFF;
 }
 
 int main(void) {
@@ -35,8 +41,6 @@ int main(void) {
   char *strnone = "None\n";
 
   sei(); // activate interrupts
-
-  uart_send_string(strnone, &tx_buffer);
 
   while (1) {
     process_action_e val = process_ring_buffer(&rx_buffer);
