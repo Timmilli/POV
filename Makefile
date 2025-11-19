@@ -44,8 +44,8 @@ os:
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	avr-gcc -mmcu=$(MMCU) $(CFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/$(FILE).elf: $(OBJ)
-	avr-gcc -mmcu=$(MMCU) $(CFLAGS) $(INCLUDE_FLAGS) -o $@ $(SRC_DIR)/$(FILE).c $^
+$(BUILD_DIR)/$(FILE).elf: $(SRC_DIR)/$(FILE).c $(OBJ)
+	avr-gcc -mmcu=$(MMCU) $(CFLAGS) $(INCLUDE_FLAGS) -o $@ $^
 
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
 	avr-objcopy -O $(BINARY_TYPE) $< $@ 
