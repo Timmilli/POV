@@ -3,13 +3,11 @@
 #include "buffer.h"
 #include "led_com.h"
 #include "uart_com.h"
-#include "uart_receive.h"
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include <stdio.h>
 #include <util/delay.h>
 
-void uart_init(unsigned int ubrr) {
+void uart_init(uint32_t ubrr) {
   /* Baud rate */
   UBRR0H = (ubrr >> 8);
   UBRR0L = ubrr;
@@ -25,30 +23,30 @@ void uart_init(unsigned int ubrr) {
   UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);  // character size
 
   UCSR0B |= (1 << RXCIE0); // interrupt on receive complete
-  // UCSR0B |= (1 << TXCIE0); // interrupt on send complete
+
   // UCSR0B |= (1 << UDRIE0); // interrupt on data register empty
+  // to activate only when something is yet to be sent
 }
 
-void uart_send_byte(uint8_t data) {
+void uart_send_byte(ring_buffer_t *rb) {
   /* Put data into buffer, sends the data */
-  UDR0 = data;
+  UDR0 = ring_buffer_get(rb);
 }
 
-void uart_send_string(char *str, struct ring_buffer *rb) {
+void uart_send_string(char *str, ring_buffer_t *rb) {
   int i = 0;
   while (str[i] != '\0') {
     if (!ring_buffer_is_full(rb))
-      ring_buffer_put(rb, str[i]);
-    else
-      break;
+      ring_buffer_put(rb, str[i++]);
+    UCSR0B |= (1 << UDRIE0); // interrupt on data register empty
   }
-  while (!uart_available())
-    ;
-  uart_send_byte(ring_buffer_get(rb));
 }
 
 // Indique si l'UART a au moins un octet disponible
 uint8_t uart_available() { return (UCSR0A & (1 << RXC0)); }
 
 // Récupère un octet de l'UART
-uint8_t uart_read_byte() { return UDR0; }
+void uart_read_byte(ring_buffer_t *rb) {
+  uint8_t data = UDR0;
+  ring_buffer_put(rb, data);
+}
