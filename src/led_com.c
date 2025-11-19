@@ -49,23 +49,3 @@ void pwm(int clock_duration) {
     _delay_us(1);
   }
 }
-
-int led_com_main(void) {
-  srand(time(NULL));
-
-  setup_led_driver_com();
-
-  uint16_t datastreak = 0;
-
-  while (1) {
-    pwm(5);
-
-    write_datastreak(datastreak);
-    if (datastreak == 0b1111111111111111) {
-      datastreak = 0;
-    } else {
-      datastreak++;
-    }
-  }
-  return 1;
-}

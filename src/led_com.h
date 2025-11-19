@@ -23,9 +23,4 @@ void write_datastreak(uint16_t datastreak);
  */
 void pwm(int duration);
 
-/**
- * Starts the main of led_com
- */
-int led_com_main(void);
-
 #endif // __LED_COM_H__
