@@ -31,18 +31,21 @@ void clock_elapse_time(int delta_us) {
   }
 }
 
+/**
+ * Updates the clock, to now!
+ */
 void clock_update() {
   uint32_t current_time = micros();
   clock_elapse_time(current_time - last_update_time);
   last_update_time = current_time;
 }
 
-uint32_t clock_get_seconds() { return seconds; }
-
-uint32_t clock_get_minutes() { return minutes; }
-
-uint32_t clock_get_hours() { return hours; }
-
+/**
+ * Sets up the current time of the clock
+ * @param s the seconds
+ * @param min the minutes
+ * @param h the hours
+ **/
 void clock_set_time(uint8_t s, uint8_t min, uint8_t h) {
   last_update_time = micros();
   seconds = s;
@@ -50,6 +53,28 @@ void clock_set_time(uint8_t s, uint8_t min, uint8_t h) {
   hours = h;
 }
 
+/**
+ * Gets the seconds of the clock
+ * @returns the seconds of the clock
+ */
+uint32_t clock_get_seconds() { return seconds; }
+
+/**
+ * Gets the minutes of the clock
+ * @returns the minutes of the clock
+ */
+uint32_t clock_get_minutes() { return minutes; }
+
+/**
+ * Gets the hours of the clock
+ * @returns the hours of the clock
+ */
+uint32_t clock_get_hours() { return hours; }
+
+/**
+ * Transforms the clock values into a string
+ * @param str 16-character long string with "hh:mm:ss\n" format
+ */
 void clock_to_string(char str[16]) {
   str[0] = '0' + hours / 10;
   str[1] = '0' + hours % 10;
