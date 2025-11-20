@@ -1,5 +1,5 @@
-#include "constants.h"
 #include "led_com.h"
+#include "constants.h"
 #include <avr/io.h>
 #include <stdlib.h>
 #include <time.h>
@@ -50,31 +50,4 @@ void pwm(int clock_duration) {
     OE_OFF;
     _delay_us(1);
   }
-}
-
-int led_com_main(void) {
-  srand(time(NULL));
-
-  setup_led_driver_com();
-
-  uint16_t datastreak = 0b1111110001111111;
-  int led_state = 1;
-  uint8_t magnet_state = PORTD & (1 << PD2);
-
-  write_datastreak(datastreak);
-  while (1) {
-    if (magnet_state != (PORTD & (1 << PD2))) {
-      led_state = ~led_state;
-      magnet_state = PORTD & (1 << PD2);
-    }
-    if (led_state) {
-      // OE on
-      OE_ON;
-      _delay_us(100);
-      // OE off
-      OE_OFF;
-      _delay_us(1);
-    }
-  }
-  return 1;
 }
