@@ -35,6 +35,8 @@ int main(void) {
   ring_buffer_init(&tx_buffer);
   ring_buffer_init(&rx_buffer);
 
+  datastreak = ~datastreak;
+  write_datastreak(datastreak);
   sei(); // activate interrupts
 
   uart_send_string("Ready!", &tx_buffer);
