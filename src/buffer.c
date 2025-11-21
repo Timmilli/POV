@@ -86,35 +86,40 @@ uint8_t str_cmp(char fstr[3], char sstr[3]) {
  * - setHHMMSS ('set' then 6 digits)
  */
 uint8_t process_ring_buffer(ring_buffer_t *rb) {
-  if (ring_buffer_available_bytes(rb) >= 9) {
+  if (ring_buffer_available_bytes(rb) >= 3) {
     char command[3] = "";
     for (uint8_t i = 0; i < 3; i++) {
       command[i] = ring_buffer_get(rb);
     }
 
     if (str_cmp(command, "set")) {
-      uint8_t tens = ring_buffer_get(rb) - '0';
-      uint8_t units = ring_buffer_get(rb) - '0';
-      ;
-      uint8_t h = 10 * tens + units;
-      tens = ring_buffer_get(rb) - '0';
-      ;
-      units = ring_buffer_get(rb) - '0';
-      ;
-      uint8_t m = 10 * tens + units;
-      tens = ring_buffer_get(rb) - '0';
-      ;
-      units = ring_buffer_get(rb) - '0';
-      ;
-      uint8_t s = 10 * tens + units;
-
-      clock_set_time(s, m, h);
       return SET_HOUR;
-    } else {
-      for (uint8_t i = 0; i < 6; i++) {
-        ring_buffer_get(rb);
-      }
+    }
+
+    else if (str_cmp(command, "get")) {
+      return GET_HOUR;
     }
   }
   return NONE;
+}
+
+/**
+ * Updates the clock values according to the buffer values
+ * @param rb the ring buffer to get the values from
+ * @param cv the clock to update the values of
+ */
+void ring_buffer_update_clock(ring_buffer_t *rb, clock_values_t *cv) {
+  uint8_t tens = ring_buffer_get(rb) - '0';
+  uint8_t units = ring_buffer_get(rb) - '0';
+  uint8_t h = 10 * tens + units;
+
+  tens = ring_buffer_get(rb) - '0';
+  units = ring_buffer_get(rb) - '0';
+  uint8_t m = 10 * tens + units;
+
+  tens = ring_buffer_get(rb) - '0';
+  units = ring_buffer_get(rb) - '0';
+  uint8_t s = 10 * tens + units;
+
+  clock_set_time(cv, s, m, h);
 }

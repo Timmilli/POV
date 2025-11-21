@@ -3,6 +3,7 @@
 
 #include "constants.h"
 
+#include "clock_module.h"
 #include <avr/io.h>
 
 /**
@@ -11,6 +12,7 @@
 typedef enum {
   NONE = 0,     // no command, or command not recognized
   SET_HOUR = 1, // hour needs to be set according to values passed
+  GET_HOUR = 2, // to send the current hour over bluetooth
 } process_action_e;
 
 /**
@@ -81,5 +83,12 @@ uint8_t str_cmp(char fstr[3], char sstr[3]);
  * - setHHMMSS ('set' then 6 digits)
  */
 uint8_t process_ring_buffer(ring_buffer_t *rb);
+
+/**
+ * Updates the clock values according to the buffer values
+ * @param rb the ring buffer to get the values from
+ * @param cv the clock to update the values of
+ */
+void ring_buffer_update_clock(ring_buffer_t *rb, clock_values_t *cv);
 
 #endif // __BUFFER_H__
