@@ -13,8 +13,7 @@ volatile unsigned long timer_overflow_count = 0;
 unsigned int get_raw_tick_count() { return timer_overflow_count; }
 
 // Return milliseconds since program start
-unsigned long micros(void) 
-{
+unsigned long micros(void) {
   uint32_t overflow_count;
   uint16_t timer_count;
 
@@ -35,8 +34,7 @@ unsigned long micros(void)
   return micros;
 }
 
-ISR(INT0_vect) 
-{
+ISR(INT0_vect) {
   unsigned long current_time = micros();
   turning_speed = 1000000.0 / (float)(current_time - last_hall_call);
   last_hall_call = current_time;
