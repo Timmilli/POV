@@ -1,0 +1,37 @@
+name: Auto-format C/C++ code
+
+on:
+  push:
+    branches:
+      - "pre-commit"
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # allows CI to push commits
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # required to allow pushing
+
+      - name: Install clang-format
+        run: sudo apt-get install -y clang-format
+
+      - name: Run clang-format
+        run: |
+          git ls-files '*.[ch]' '*.cpp' '*.hpp' | xargs clang-format -i
+
+      - name: Commit and push formatting changes
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "CI Formatter"
+            git config user.email "ci@example.com"
+            git add -u
+            git commit -m "style: automatic clang-format"
+            git push
+          fi
+
