@@ -1,6 +1,9 @@
+
 #include "constants.h"
+
 #include "led_com.h"
 #include <avr/interrupt.h>
+
 #include <avr/io.h>
 #include <stdlib.h>
 #include <time.h>
@@ -33,7 +36,8 @@ unsigned long micros(void) {
   return micros;
 }
 
-ISR(INT0_vect) {
+ISR(INT0_vect)
+ {
   unsigned long current_time = micros();
   turning_speed = 1000000.0 / (float)(current_time - last_hall_call);
   last_hall_call = current_time;
