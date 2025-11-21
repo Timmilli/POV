@@ -57,17 +57,13 @@
  * Straight clock constants
  */
 
-#ifndef NUMBER_OF_POSITIONS
-#define NUMBER_OF_POSITIONS 60
-#endif
+#define NUMBER_OF_POSITIONS 120
 
 /*
  * Ring buffer specific constants
  */
 
-#ifndef RING_BUFFER_SIZE
 #define RING_BUFFER_SIZE 64
-#endif
 
 /*
  * USART specific constants
