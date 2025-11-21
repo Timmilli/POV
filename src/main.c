@@ -53,6 +53,9 @@ int main(void) {
 
   while (1) {
     process_action_e val = process_ring_buffer(&rx_buffer);
+    datastreak = clock_get_seconds(&cv) + (clock_get_minutes(&cv) << 6) +
+                 (clock_get_hours(&cv) << 12);
+    write_datastreak(datastreak);
 
     switch (val) {
     case SET_HOUR:
