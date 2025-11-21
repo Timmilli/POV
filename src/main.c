@@ -4,6 +4,7 @@
 #include "clock_module.h"
 #include "hall_sensor.h"
 #include "led_com.h"
+#include "merge_matrices.h"
 #include "uart_com.h"
 #include <avr/interrupt.h>
 #include <avr/io.h>
@@ -13,6 +14,7 @@ ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
 clock_values_t cv;
 uint16_t datastreak = 0b1111100000011111;
+uint16_t mat[NUMBER_OF_POSITIONS] = {};
 
 /**
  * Receiving interrupt function
@@ -44,18 +46,18 @@ int main(void) {
   uint8_t i = 0;
   char str[16] = "hh:mm:ss\n";
 
-  datastreak = clock_get_seconds(&cv) + (clock_get_minutes(&cv) << 6) +
-               (clock_get_hours(&cv) << 12);
-  write_datastreak(datastreak);
+  merge_matrices(mat, &cv);
+
   sei(); // activate interrupts
 
   uart_send_string("\n\nReady!\n", &tx_buffer);
 
   while (1) {
-    process_action_e val = process_ring_buffer(&rx_buffer);
-    datastreak = clock_get_seconds(&cv) + (clock_get_minutes(&cv) << 6) +
-                 (clock_get_hours(&cv) << 12);
+    uint32_t angle = get_current_angle();
+    datastreak = mat[angle % NUMBER_OF_POSITIONS];
     write_datastreak(datastreak);
+
+    process_action_e val = process_ring_buffer(&rx_buffer);
 
     switch (val) {
     case SET_HOUR:
