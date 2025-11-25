@@ -16,9 +16,9 @@ void setup_hall_sensor(void);
  */
 
 long micros(void);
-/** 
- * Give for how long the programm has been running in us 
-*/
+/**
+ * Give for how long the programm has been running in us
+ */
 
 float get_turning_speed();
 /**
