@@ -13,7 +13,7 @@
 ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
 clock_values_t cv;
-uint16_t datastreak = 0b0000000000000000;
+uint16_t datastreak = 0;
 uint16_t mat[NUMBER_OF_POSITIONS] = {};
 
 /**
@@ -46,15 +46,19 @@ int main(void) {
   uint8_t i = 0;
   char str[16] = "hh:mm:ss\n";
 
-  merge_matrices(mat, &cv);
-
   sei(); // activate interrupts
 
   uart_send_string("\n\nReady!\n", &tx_buffer);
 
+  merge_matrices(mat, &cv, &tx_buffer);
+
   while (1) {
     uint32_t angle = get_current_angle(); // degré
-    datastreak = mat[angle / 3];
+    if (angle < 360)
+      datastreak = mat[angle / 3];
+    else
+      datastreak = 0;
+
     if (clock_get_seconds(&cv) < angle / 6) {
       datastreak &= ~(0b0000000000000001);
     } else {
@@ -63,7 +67,10 @@ int main(void) {
 
     write_datastreak(datastreak);
 
-    process_action_e val = process_ring_buffer(&rx_buffer);
+    process_action_e val = NONE;
+
+    if (ring_buffer_available_bytes(&rx_buffer) > 0)
+      val = process_ring_buffer(&rx_buffer);
 
     switch (val) {
     case SET_HOUR:
@@ -81,7 +88,6 @@ int main(void) {
     }
 
     clock_update(&cv);
-    // pwm(5);
   }
   return 1;
 }
