@@ -13,7 +13,7 @@ import os
 # === CONFIGURATION ===
 NAME = "barre"
 NUM_LEDS = 16               # Number of LEDs per POV bar
-THETA_RES = 6               # Angular resolution in degrees, to update
+THETA_RES = 3               # Angular resolution in degrees, to update
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Folder containing the script
 IMG_PATH = os.path.join(BASE_DIR, "rough_images", f"{NAME}.png")
 

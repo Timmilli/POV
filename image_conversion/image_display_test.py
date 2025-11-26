@@ -11,7 +11,7 @@ import os
 # === CONFIGURATION ===
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "converted_images")
-MATRIX_FILE = os.path.join(OUTPUT_DIR, "barre_1512.txt") # Test : 15:12 display (working)
+MATRIX_FILE = os.path.join(OUTPUT_DIR, "1512.txt")
 NUM_LEDS = 16
 THETA_RES = 3  
 
