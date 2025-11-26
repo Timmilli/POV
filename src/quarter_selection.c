@@ -1,6 +1,6 @@
 #include "constants.h"
 
-#include "encoding.h"
+#include "encoding_120.h"
 #include "quarter_selection.h"
 #include <avr/io.h>
 
