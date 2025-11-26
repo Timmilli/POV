@@ -1,3 +1,8 @@
+#ifndef __ENCODING_H__ 
+#define __ENCODING_H__ 
+#include "constants.h" 
+#include <avr/io.h> 
+
 #define NUMBER_OF_POSITIONS 120
 
 const uint16_t c1n0[NUMBER_OF_POSITIONS] PROGMEM = {

@@ -12,10 +12,10 @@ import glob
 # === CONFIGURATION ===
 
 NUM_LEDS = 16               # Number of LEDs per POV bar
-THETA_RES = 3               # Angular resolution in degrees
+THETA_RES = 12               # Angular resolution in degrees
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CHIFFRES_DIR = os.path.join(BASE_DIR, "chiffres")
+CHIFFRES_DIR = os.path.join(BASE_DIR, "3_chiffres")
 OUTPUT_DIR = os.path.join(BASE_DIR, "converted_images")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "encoding.h")
@@ -78,7 +78,7 @@ with open(OUTPUT_FILE, "w") as f:
 
             if first_matrix:
                 number_of_positions = len(display_matrix)
-                f.write(f"#define NUMBER_OF_POSITIONS {number_of_positions}\n\n")
+                f.write(f"#ifndef __ENCODING_H__ \n#define __ENCODING_H__ \n#include \"constants.h\" \n#include <avr/io.h> \n\n#define NUMBER_OF_POSITIONS {number_of_positions}\n\n")
                 first_matrix = False
 
             # --- ECRITURE DANS LE FICHIER ---

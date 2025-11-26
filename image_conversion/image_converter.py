@@ -13,7 +13,7 @@ import os
 # === CONFIGURATION ===
 NAME = "barre"
 NUM_LEDS = 16               # Number of LEDs per POV bar
-THETA_RES = 3               # Angular resolution in degrees, to update
+THETA_RES = 6               # Angular resolution in degrees, to update
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Folder containing the script
 IMG_PATH = os.path.join(BASE_DIR, "rough_images", f"{NAME}.png")
 
@@ -70,7 +70,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)  # creates directory if it doesn't exist
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, f"{NAME}.h")
 
 with open(OUTPUT_FILE, "w") as f:
-    f.write(f"#ifndef __ENCODING_H__ \n#define __ENCODING_H__ \n#include \"constants.h\" \n#include <avr/io.h> \n#define NUMBER_OF_POSITIONS 120 \n#define NUMBER_OF_POSITIONS {len(display_matrix)}")
+    f.write(f"#ifndef __ENCODING_H__ \n#define __ENCODING_H__ \n#include \"constants.h\" \n#include <avr/io.h> \n\n#define NUMBER_OF_POSITIONS {len(display_matrix)}")
     f.write(f"\nconst uint16_t led_list[NUMBER_OF_POSITIONS] PROGMEM = " + "{ \n")
     for idx, row in enumerate(display_matrix):
         row_str = "".join(row)
