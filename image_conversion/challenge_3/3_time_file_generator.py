@@ -12,11 +12,11 @@ import glob
 # === CONFIGURATION ===
 
 NUM_LEDS = 16               # Number of LEDs per POV bar
-THETA_RES = 12               # Angular resolution in degrees
+THETA_RES = 3               # Angular resolution in degrees
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CHIFFRES_DIR = os.path.join(BASE_DIR, "3_chiffres")
-OUTPUT_DIR = os.path.join(BASE_DIR, "converted_images")
+OUTPUT_DIR = os.path.join(BASE_DIR, "..\converted_images")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "encoding.h")
 
