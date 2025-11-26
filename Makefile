@@ -7,7 +7,7 @@ BUILD_DIR = build
 
 LIB_DIR = /usr/lib/avr/include/
 INCLUDE_FLAGS = -I$(LIB_DIR)
-CFLAGS = -O3
+CFLAGS = -Os
 
 SRC = $(filter-out $(SRC_DIR)/$(FILE).c, $(wildcard $(SRC_DIR)/*.c))
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC))
