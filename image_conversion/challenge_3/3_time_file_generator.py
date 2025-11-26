@@ -12,13 +12,14 @@ import glob
 # === CONFIGURATION ===
 
 NUM_LEDS = 16               # Number of LEDs per POV bar
-THETA_RES = 3               # Angular resolution in degrees
+THETA_RES = 12               # Angular resolution in degrees
+FINAL_RES = int(360 / THETA_RES)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CHIFFRES_DIR = os.path.join(BASE_DIR, "3_chiffres")
-OUTPUT_DIR = os.path.join(BASE_DIR, "..\converted_images")
+OUTPUT_DIR = os.path.join(BASE_DIR, "..", "converted_images", "challenge_3")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, "encoding.h")
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, f"encoding_{FINAL_RES}.h")
 
 EXPECTED_SIZE = (NUM_LEDS * 2, NUM_LEDS * 2)
 
@@ -26,7 +27,7 @@ EXPECTED_SIZE = (NUM_LEDS * 2, NUM_LEDS * 2)
 
 def pixel_to_led(value):
     """Convert a grayscale pixel value (0-255) to LED state: '0' off, '1' on"""
-    return "1" if value < 128 else "0"
+    return "1" if value < 80 else "0"
 
 def safe_pixel(pixels, w, h, x, y):
     """Return the pixel value within image bounds."""
@@ -53,7 +54,6 @@ with open(OUTPUT_FILE, "w") as f:
             # --- CHARGEMENT IMAGE ---
             im = Image.open(png_file).convert("L")
             im = im.rotate(90, expand=True)
-            im = im.transpose(Image.FLIP_LEFT_RIGHT)
             w, h = im.size
             if (w, h) != EXPECTED_SIZE:
                 print(f"Warning: {png_file} ignored (wrong size {w}x{h})")
@@ -78,7 +78,13 @@ with open(OUTPUT_FILE, "w") as f:
 
             if first_matrix:
                 number_of_positions = len(display_matrix)
-                f.write(f"#ifndef __ENCODING_H__ \n#define __ENCODING_H__ \n#include \"constants.h\" \n#include <avr/io.h> \n\n#define NUMBER_OF_POSITIONS {number_of_positions}\n\n")
+                f.write(
+                f"#ifndef __ENCODING_H_{FINAL_RES}__\n"
+                f"#define __ENCODING_H_{FINAL_RES}__\n"
+                f"#include \"constants.h\"\n"
+                f"#include <avr/io.h>\n\n"
+                f"#define NUMBER_OF_POSITIONS {number_of_positions}\n\n"
+            )
                 first_matrix = False
 
             # --- ECRITURE DANS LE FICHIER ---
@@ -88,6 +94,8 @@ with open(OUTPUT_FILE, "w") as f:
                 f.write(f"  0b{row_str}")
                 if idx < len(display_matrix) - 1:
                     f.write(",\n")
-            f.write("\n};\n\n")
+            f.write("\n}" + f";\n#define {matrix_name.upper()} {matrix_name}\n\n")
+
+        f.write(f"#endif // __ENCODING_H_{FINAL_RES}__\n")
 
 print(f"Success: File generated → {OUTPUT_FILE}")
