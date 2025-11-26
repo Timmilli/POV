@@ -23,7 +23,7 @@ void clock_init(clock_values_t *cv);
 /**
  * Updates the clock, to now!
  */
-void clock_update(clock_values_t *cv);
+uint8_t clock_update(clock_values_t *cv);
 
 /**
  * Sets up the current time of the clock

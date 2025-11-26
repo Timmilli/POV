@@ -17,32 +17,40 @@ void clock_init(clock_values_t *cv) {
   cv->last_update_time = 0UL;
 }
 
-void clock_elapse_time(clock_values_t *cv, int delta_us) {
+uint8_t clock_elapse_time(clock_values_t *cv, int delta_us) {
+  uint8_t clock_updated = 0;
   cv->us += delta_us;
   if (cv->us >= 1000000UL) {
     cv->seconds += 1;
+    clock_updated = 1;
     cv->us -= 1000000UL;
   }
   if (cv->seconds >= 60) {
     cv->minutes += 1;
+    clock_updated = 1;
     cv->seconds = 0;
   }
   if (cv->minutes >= 60) {
     cv->hours += 1;
+    clock_updated = 1;
     cv->minutes = 0;
   }
   if (cv->hours >= 24) {
     cv->hours = 0;
+    clock_updated = 1;
   }
+  return clock_updated;
 }
 
 /**
  * Updates the clock, to now!
  */
-void clock_update(clock_values_t *cv) {
+uint8_t clock_update(clock_values_t *cv) {
   uint32_t current_time = micros();
-  clock_elapse_time(cv, current_time - cv->last_update_time);
+  uint8_t clock_updated =
+      clock_elapse_time(cv, current_time - cv->last_update_time);
   cv->last_update_time = current_time;
+  return clock_updated;
 }
 
 /**
