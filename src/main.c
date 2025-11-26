@@ -13,7 +13,7 @@
 ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
 clock_values_t cv;
-uint16_t datastreak = 0b1111100000011111;
+uint16_t datastreak = 0b0000000000000000;
 uint16_t mat[NUMBER_OF_POSITIONS] = {};
 
 /**
@@ -53,17 +53,20 @@ int main(void) {
   uart_send_string("\n\nReady!\n", &tx_buffer);
 
   while (1) {
-    uint32_t angle = get_current_angle();
-    datastreak = mat[angle % NUMBER_OF_POSITIONS];
+    uint32_t angle = get_current_angle(); // degré
+    datastreak = mat[angle / 3];
+    if (clock_get_seconds(&cv) < angle / 6) {
+      datastreak &= ~(0b0000000000000001);
+    } else {
+      datastreak |= 0b0000000000000001;
+    }
+
     write_datastreak(datastreak);
 
     process_action_e val = process_ring_buffer(&rx_buffer);
 
     switch (val) {
     case SET_HOUR:
-      datastreak = clock_get_seconds(&cv) + (clock_get_minutes(&cv) << 6) +
-                   (clock_get_hours(&cv) << 12);
-      write_datastreak(datastreak);
       ring_buffer_update_clock(&rx_buffer, &cv);
       uart_send_string("Clock set to: ", &tx_buffer);
       clock_to_string(&cv, str);
@@ -78,7 +81,7 @@ int main(void) {
     }
 
     clock_update(&cv);
-    pwm(1);
+    // pwm(5);
   }
   return 1;
 }
