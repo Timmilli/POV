@@ -55,7 +55,7 @@ int main(void) {
   while (1) {
     uint32_t angle = get_current_angle(); // degré
     if (angle < 360)
-      datastreak = mat[angle / 3];
+      datastreak = mat[angle / (360 / NUMBER_OF_POSITIONS)];
     else
       datastreak = 0;
 
@@ -78,16 +78,20 @@ int main(void) {
       uart_send_string("Clock set to: ", &tx_buffer);
       clock_to_string(&cv, str);
       uart_send_string(str, &tx_buffer);
+      merge_matrices(mat, &cv);
       break;
     case GET_HOUR:
       clock_to_string(&cv, str);
       uart_send_string("Current clock: ", &tx_buffer);
       uart_send_string(str, &tx_buffer);
+      break;
     default:
       break;
     }
 
-    clock_update(&cv);
+    uint8_t clock_updated = clock_update(&cv);
+    if (clock_updated)
+      merge_matrices(mat, &cv);
   }
   return 1;
 }
