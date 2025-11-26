@@ -11,7 +11,7 @@ import os
 # === CONFIGURATION ===
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "converted_images")
-MATRIX_FILE = os.path.join(OUTPUT_DIR, "1512.txt")
+MATRIX_FILE = os.path.join(OUTPUT_DIR, "test.txt")
 NUM_LEDS = 16
 THETA_RES = 3  
 
@@ -49,7 +49,7 @@ for j, row in enumerate(matrix):
 # === PLOT ===
 plt.figure(figsize=(6,6))
 ax = plt.subplot(111, polar=True)
-ax.set_theta_direction(-1)  # clockwise
+ax.set_theta_direction(1)  # anticlockwise
 ax.set_theta_zero_location("N")  # 0° at the top
 ax.scatter(theta_vals, r_vals, c='black', s=50)  # draw points for LEDs
 ax.set_rticks(range(0, NUM_LEDS+1))  # optional radial ticks

@@ -83,6 +83,7 @@ with open(OUTPUT_FILE, "w") as f:
                 f"#define __ENCODING_H_{FINAL_RES}__\n"
                 f"#include \"constants.h\"\n"
                 f"#include <avr/io.h>\n\n"
+                f"#include <avr/pgmspace.h>\n\n"
                 f"#define NUMBER_OF_POSITIONS {number_of_positions}\n\n"
             )
                 first_matrix = False
@@ -96,6 +97,6 @@ with open(OUTPUT_FILE, "w") as f:
                     f.write(",\n")
             f.write("\n}" + f";\n#define {matrix_name.upper()} {matrix_name}\n\n")
 
-        f.write(f"#endif // __ENCODING_H_{FINAL_RES}__\n")
+    f.write(f"#endif // __ENCODING_H_{FINAL_RES}__\n")
 
 print(f"Success: File generated → {OUTPUT_FILE}")
