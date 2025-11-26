@@ -50,7 +50,7 @@ int main(void) {
 
   uart_send_string("\n\nReady!\n", &tx_buffer);
 
-  merge_matrices(mat, &cv, &tx_buffer);
+  merge_matrices(mat, &cv);
 
   while (1) {
     uint32_t angle = get_current_angle(); // degré
