@@ -19,7 +19,7 @@ void merge_matrices(uint16_t mat[NUMBER_OF_POSITIONS], clock_values_t *cv) {
   const uint16_t *mt_quarter = get_mt_quarter(minutes_tens);
 
   for (uint8_t i = 0; i < NUMBER_OF_POSITIONS; i++) {
-    mat[i] = pgm_read_word(hu_quarter[i]) | pgm_read_word(ht_quarter[i]) |
-             pgm_read_word(mu_quarter[i]) | pgm_read_word(mt_quarter[i]);
+    mat[i] = pgm_read_word(&hu_quarter[i]) | pgm_read_word(&ht_quarter[i]) |
+             pgm_read_word(&mu_quarter[i]) | pgm_read_word(&mt_quarter[i]);
   }
 }
