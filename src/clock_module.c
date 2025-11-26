@@ -22,7 +22,6 @@ uint8_t clock_elapse_time(clock_values_t *cv, int delta_us) {
   cv->us += delta_us;
   if (cv->us >= 1000000UL) {
     cv->seconds += 1;
-    clock_updated = 1;
     cv->us -= 1000000UL;
   }
   if (cv->seconds >= 60) {
