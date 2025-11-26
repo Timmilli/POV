@@ -3,6 +3,8 @@
 #include "constants.h"
 #include <avr/io.h>
 
+#include <avr/pgmspace.h>
+
 #define NUMBER_OF_POSITIONS 360
 
 const uint16_t c1n0[NUMBER_OF_POSITIONS] PROGMEM = {
@@ -1097,7 +1099,6 @@ const uint16_t c1n2[NUMBER_OF_POSITIONS] PROGMEM = {
 };
 #define C1N2 c1n2
 
-#endif // __ENCODING_H_360__
 const uint16_t c2n0[NUMBER_OF_POSITIONS] PROGMEM = {
   0b0000000000000000,
   0b0000000000000000,
@@ -4738,7 +4739,6 @@ const uint16_t c2n9[NUMBER_OF_POSITIONS] PROGMEM = {
 };
 #define C2N9 c2n9
 
-#endif // __ENCODING_H_360__
 const uint16_t c3n0[NUMBER_OF_POSITIONS] PROGMEM = {
   0b0000000000000000,
   0b0000000000000000,
@@ -6923,7 +6923,6 @@ const uint16_t c3n5[NUMBER_OF_POSITIONS] PROGMEM = {
 };
 #define C3N5 c3n5
 
-#endif // __ENCODING_H_360__
 const uint16_t c4n0[NUMBER_OF_POSITIONS] PROGMEM = {
   0b0000000000000000,
   0b0000000000000000,
