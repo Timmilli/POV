@@ -1,12 +1,10 @@
-#ifndef __ENCODING_H__
-#define __ENCODING_H__
+#ifndef __ENCODING_180_H__
+#define __ENCODING_180_H__
 
 #include "constants.h"
 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
-
-#define NUMBER_OF_POSITIONS 180
 
 const uint16_t c1n0[NUMBER_OF_POSITIONS] PROGMEM = {
     0b0000000000000000, 0b0000000000000000, 0b0000000000000000,
