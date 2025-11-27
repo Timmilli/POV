@@ -10,10 +10,10 @@
  * Initializes the UART communication
  * @param ubrr is the baud rate
  */
-void uart_init(uint32_t ubrr) {
+void uart_init() {
   /* Baud rate */
-  UBRR0H = (ubrr >> 8);
-  UBRR0L = ubrr;
+  UBRR0H = (MYUBRR >> 8);
+  UBRR0L = MYUBRR;
 
   UCSR0A = 0;
   UCSR0B = 0;

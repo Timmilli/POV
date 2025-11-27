@@ -40,7 +40,7 @@ int main(void) {
    * Initializing everything
    */
   setup_led_driver_com();
-  uart_init(MYUBRR); // TODO remove the macro as uart has access to it
+  uart_init();
   setup_hall_sensor();
 
   ring_buffer_init(&tx_buffer);

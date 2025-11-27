@@ -8,9 +8,8 @@
 
 /**
  * Initializes the UART communication
- * @param ubrr is the baud rate
  */
-void uart_init(uint32_t ubrr);
+void uart_init();
 
 /**
  * Sends a byte by UART
