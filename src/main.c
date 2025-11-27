@@ -15,13 +15,14 @@ ring_buffer_t rx_buffer;
 clock_values_t cv;
 uint16_t datastreak = 0;
 uint16_t mat[NUMBER_OF_POSITIONS] = {};
+uint8_t end_of_string = 0;
 
 /**
  * Receiving interrupt function
  */
 ISR(USART_RX_vect) {
   if (!ring_buffer_is_full(&rx_buffer))
-    uart_read_byte(&rx_buffer);
+    end_of_string = uart_read_byte(&rx_buffer);
 }
 
 /**
@@ -68,15 +69,16 @@ int main(void) {
     write_datastreak(datastreak);
 
     process_action_e val = NONE;
-
-    if (ring_buffer_available_bytes(&rx_buffer) > 0)
+    if (end_of_string == 1) {
       val = process_ring_buffer(&rx_buffer);
+      end_of_string = 0;
+    }
 
     switch (val) {
     case SET_HOUR:
       ring_buffer_update_clock(&rx_buffer, &cv);
-      uart_send_string("Clock set to: ", &tx_buffer);
       clock_to_string(&cv, str);
+      uart_send_string("Clock set to: ", &tx_buffer);
       uart_send_string(str, &tx_buffer);
       merge_matrices(mat, &cv);
       break;
