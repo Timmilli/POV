@@ -112,7 +112,7 @@ int main(void) {
     // According to the parsing
     switch (val) {
       // Setting another time
-    case SET_HOUR:
+    case SET_HOUR: {
       ring_buffer_update_clock(&rx_buffer, &cv);
       merge_matrices(mat, &cv);
       // Feedback to the user
@@ -120,19 +120,23 @@ int main(void) {
       uart_send_string("Clock set to: ", &tx_buffer);
       uart_send_string(clock_format_str, &tx_buffer);
       break;
+    }
       // Or getting the time
-    case GET_HOUR:
+    case GET_HOUR: {
       clock_to_string(&cv, clock_format_str);
       uart_send_string("Current clock: ", &tx_buffer);
       uart_send_string(clock_format_str, &tx_buffer);
       break;
-    case GET_SPEED:
+    }
+      // Or getting the speed
+    case GET_SPEED: {
       uint16_t speed = get_turning_speed();
       uart_send_string("Turning speed: ", &tx_buffer);
       sprintf(blank_format_str, "%d", speed);
       uart_send_string(blank_format_str, &tx_buffer);
       uart_send_string("\n", &tx_buffer);
       break;
+    }
     default:
       break;
     }
