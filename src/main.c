@@ -9,6 +9,7 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdio.h>
 
 ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
@@ -84,6 +85,12 @@ int main(void) {
       clock_to_string(&cv, str);
       uart_send_string("Current clock: ", &tx_buffer);
       uart_send_string(str, &tx_buffer);
+      break;
+    case GET_SPEED:
+      uint16_t speed = get_turning_speed();
+      uart_send_string("Turning speed: ",&tx_buffer);
+      sprintf(str,"%d",speed);
+      uart_send_string(str,&tx_buffer);
       break;
     default:
       break;
