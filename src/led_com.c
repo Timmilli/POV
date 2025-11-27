@@ -22,8 +22,6 @@ void setup_led_driver_com() {
  * encoding of the leds powered on
  */
 void write_datastreak(uint16_t datastreak) {
-  LE_ON;
-
   for (int i = 0; i < 16; i++) {
     if (datastreak & (1 << i)) {
       SDI_ON;
@@ -35,6 +33,7 @@ void write_datastreak(uint16_t datastreak) {
     CLK_OFF;
   }
 
+  LE_ON;
   LE_OFF;
 }
 
