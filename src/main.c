@@ -8,8 +8,8 @@
 #include "uart_com.h"
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include <util/delay.h>
 #include <stdio.h>
+#include <util/delay.h>
 
 ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
@@ -52,7 +52,8 @@ int main(void) {
   // This is the format used in answers in UART communication for the clock
   char clock_format_str[16] = "hh:mm:ss\n";
 
-  // Blank format used in other answers in UART communication. Basically used as a buffer.
+  // Blank format used in other answers in UART communication. Basically used as
+  // a buffer.
   char blank_format_str[16] = "\n";
 
   // Activating global interrupts
@@ -127,10 +128,10 @@ int main(void) {
       break;
     case GET_SPEED:
       uint16_t speed = get_turning_speed();
-      uart_send_string("Turning speed: ",&tx_buffer);
-      sprintf(blank_format_str,"%d",speed);
-      uart_send_string(blank_format_str,&tx_buffer);
-      uart_send_string("\n",&tx_buffer);
+      uart_send_string("Turning speed: ", &tx_buffer);
+      sprintf(blank_format_str, "%d", speed);
+      uart_send_string(blank_format_str, &tx_buffer);
+      uart_send_string("\n", &tx_buffer);
       break;
     default:
       break;
