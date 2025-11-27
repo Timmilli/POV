@@ -100,7 +100,7 @@ uint8_t process_ring_buffer(ring_buffer_t *rb) {
       return GET_HOUR;
     }
 
-    else if (str_cmp(command, "spd")){
+    else if (str_cmp(command, "spd")) {
       return GET_SPEED;
     }
   }
