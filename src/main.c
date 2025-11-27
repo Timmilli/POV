@@ -77,10 +77,21 @@ int main(void) {
       datastreak = 0;
 
     // Putting the seconds as the outer led ring
-    if (clock_get_seconds(&cv) < angle / 6) {
-      datastreak &= ~(0b0000000000000001);
+    uint8_t s = clock_get_seconds(&cv);
+    if (angle > 180) {
+      if (s < (angle - 180) / 6) {
+        datastreak &= ~(0b0000000000000001);
+      } else {
+        datastreak |= 0b0000000000000001;
+      }
     } else {
-      datastreak |= 0b0000000000000001;
+      if (s > 30) {
+        if ((s - 30) < angle / 6) {
+          datastreak &= ~(0b0000000000000001);
+        } else {
+          datastreak |= 0b0000000000000001;
+        }
+      }
     }
 
     // Writing the datastreak
