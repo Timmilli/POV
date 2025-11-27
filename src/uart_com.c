@@ -6,6 +6,10 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+/**
+ * Initializes the UART communication
+ * @param ubrr is the baud rate
+ */
 void uart_init(uint32_t ubrr) {
   /* Baud rate */
   UBRR0H = (ubrr >> 8);
@@ -24,11 +28,22 @@ void uart_init(uint32_t ubrr) {
   UCSR0B |= (1 << RXCIE0); // interrupt on receive complete
 }
 
+/**
+ * Sends a byte by UART
+ * Does not check if the UART is ready to send a byte
+ * @param rb the buffer to get the byte from
+ */
 void uart_send_byte(ring_buffer_t *rb) {
   /* Put data into buffer, sends the data */
   UDR0 = ring_buffer_get(rb);
 }
 
+/**
+ * Sends a string by UART
+ * Checks if the UART is ready to send each byte
+ * @param str is the string to send
+ * @param rb the buffer used to save the string
+ */
 void uart_send_string(char *str, ring_buffer_t *rb) {
   int i = 0;
   while (str[i] != '\0') {
@@ -38,10 +53,17 @@ void uart_send_string(char *str, ring_buffer_t *rb) {
   }
 }
 
-// Indique si l'UART a au moins un octet disponible
+/**
+ * Checks if the UART is free to send or receive a byte
+ * @returns 0 if available, 1 otherwise
+ */
 uint8_t uart_available() { return (UCSR0A & (1 << RXC0)); }
 
-// Récupère un octet de l'UART
+/**
+ * Reads a byte from the UART
+ * @param rb is the buffer to put the read byte into
+ * @returns 1 if end of string, 0 otherwise
+ */
 uint8_t uart_read_byte(ring_buffer_t *rb) {
   uint8_t data = UDR0;
   return ring_buffer_put(rb, data);
