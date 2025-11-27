@@ -49,8 +49,11 @@ int main(void) {
 
   clock_init(&cv);
 
-  // This is the format used in answers in UART communication
+  // This is the format used in answers in UART communication for the clock
   char clock_format_str[16] = "hh:mm:ss\n";
+
+  // Blank format used in other answers in UART communication. Basically used as a buffer.
+  char blank_format_str[16] = "\n";
 
   // Activating global interrupts
   sei();
@@ -114,8 +117,9 @@ int main(void) {
     case GET_SPEED:
       uint16_t speed = get_turning_speed();
       uart_send_string("Turning speed: ",&tx_buffer);
-      sprintf(str,"%d",speed);
-      uart_send_string(str,&tx_buffer);
+      sprintf(blank_format_str,"%d",speed);
+      uart_send_string(blank_format_str,&tx_buffer);
+      uart_send_string("\n",&tx_buffer);
       break;
     default:
       break;
