@@ -1,8 +1,11 @@
 #include "constants.h"
 
 #include "hall_sensor.h"
+#include "led_com.h"
 #include <avr/interrupt.h>
 #include <avr/io.h>
+#include <stdlib.h>
+#include <time.h>
 
 volatile uint32_t last_hall_call = 0UL;
 volatile float turning_speed = 0;
