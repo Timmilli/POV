@@ -19,8 +19,9 @@ void write_datastreak(uint16_t datastreak);
 
 /**
  * Does a PWM to adjust the brightness
- * @duration int such as the function is called for (duration*101)us
+ * @param duration is the number of times the function is called making it being
+ * called for (duration*101)us
  */
-void pwm(int duration);
+void pwm(uint8_t clock_duration);
 
 #endif // __LED_COM_H__

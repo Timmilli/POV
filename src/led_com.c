@@ -39,9 +39,10 @@ void write_datastreak(uint16_t datastreak) {
 
 /**
  * Does a PWM to adjust the brightness
- * @duration int such as the function is called for (duration*101)us
+ * @param duration is the number of times the function is called making it being
+ * called for (duration*101)us
  */
-void pwm(int clock_duration) {
+void pwm(uint8_t clock_duration) {
   for (int _ = 0; _ < clock_duration; _++) {
     OE_ON;
     _delay_us(100);
