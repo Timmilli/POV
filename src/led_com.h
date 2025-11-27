@@ -12,8 +12,8 @@ void setup_led_driver_com();
 
 /**
  * Writes the datastreak
- * @datastreak uint16 corresponding to the decimal value of the binary encoding
- * of the led powered on
+ * @param datastreak is corresponding to the decimal value of the binary
+ * encoding of the leds powered on
  */
 void write_datastreak(uint16_t datastreak);
 

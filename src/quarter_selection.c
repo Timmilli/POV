@@ -4,8 +4,13 @@
 #include "quarter_selection.h"
 #include <avr/io.h>
 
-const uint16_t *get_hu_quarter(uint8_t hours_units) {
-  switch (hours_units) {
+/**
+ * Gets the pointer to the hour units quarter according to the given value
+ * @param hours_units is the value to be shown in the top right quarter
+ * @returns a pointer to the array corresponding to the value
+ */
+const uint16_t *get_hu_quarter(uint8_t hour_units) {
+  switch (hour_units) {
   case 0:
     return C2N0;
   case 1:
@@ -30,8 +35,13 @@ const uint16_t *get_hu_quarter(uint8_t hours_units) {
   return C2N0;
 }
 
-const uint16_t *get_ht_quarter(uint8_t hours_tens) {
-  switch (hours_tens) {
+/**
+ * Gets the pointer to the hour tens quarter according to the given value
+ * @param hour_tens is the value to be shown in the top left quarter
+ * @returns a pointer to the array corresponding to the value
+ */
+const uint16_t *get_ht_quarter(uint8_t hour_tens) {
+  switch (hour_tens) {
   case 0:
     return C1N0;
   case 1:
@@ -42,8 +52,13 @@ const uint16_t *get_ht_quarter(uint8_t hours_tens) {
   return C1N0;
 }
 
-const uint16_t *get_mu_quarter(uint8_t minutes_units) {
-  switch (minutes_units) {
+/**
+ * Gets the pointer to the minute units quarter according to the given value
+ * @param minute_units is the value to be shown in the bottom right quarter
+ * @returns a pointer to the array corresponding to the value
+ */
+const uint16_t *get_mu_quarter(uint8_t minute_units) {
+  switch (minute_units) {
   case 0:
     return C4N0;
   case 1:
@@ -68,8 +83,13 @@ const uint16_t *get_mu_quarter(uint8_t minutes_units) {
   return C4N0;
 }
 
-const uint16_t *get_mt_quarter(uint8_t minutes_tens) {
-  switch (minutes_tens) {
+/**
+ * Gets the pointer to the minute units quarter according to the given value
+ * @param minute_tens is the value to be shown in the bottom left quarter
+ * @returns a pointer to the array corresponding to the value
+ */
+const uint16_t *get_mt_quarter(uint8_t minute_tens) {
+  switch (minute_tens) {
   case 0:
     return C3N0;
   case 1:

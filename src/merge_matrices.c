@@ -1,13 +1,16 @@
 #include "constants.h"
 
-#include "buffer.h"
 #include "clock_module.h"
 #include "merge_matrices.h"
 #include "quarter_selection.h"
-#include "uart_com.h"
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
+/**
+ * Merges the matrices to create the straight clock image
+ * @param mat is the final matrix to be filled
+ * @param cv the clock values to fill the matrix with
+ */
 void merge_matrices(uint16_t mat[NUMBER_OF_POSITIONS], clock_values_t *cv) {
   uint8_t hours_units = cv->hours % 10;
   uint8_t hours_tens = cv->hours / 10;

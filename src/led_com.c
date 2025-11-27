@@ -1,10 +1,12 @@
-#include "led_com.h"
 #include "constants.h"
+
+#include "led_com.h"
 #include <avr/io.h>
-#include <stdlib.h>
-#include <time.h>
 #include <util/delay.h>
 
+/**
+ * Sets up the communication with the led driver
+ */
 void setup_led_driver_com() {
   // Setup pins in writing mode
   DDRB |= (1 << PB3) | (1 << PB5); // SDI | CLK
@@ -14,39 +16,36 @@ void setup_led_driver_com() {
   DDRD &= ~(1 << PD2); // HALL
 }
 
+/**
+ * Writes the datastreak
+ * @param datastreak is corresponding to the decimal value of the binary
+ * encoding of the leds powered on
+ */
 void write_datastreak(uint16_t datastreak) {
+  LE_ON;
+
   for (int i = 0; i < 16; i++) {
     if (datastreak & (1 << i)) {
-      // SDI
-      // turns on
       SDI_ON;
     } else {
-      // SDI
-      // shuts off
       SDI_OFF;
     }
 
-    // CLK
-    // turns on
     CLK_ON;
-    // CLK
-    // shuts off
     CLK_OFF;
   }
 
-  // LE
-  // turns on
-  LE_ON;
-  // turns off
   LE_OFF;
 }
 
+/**
+ * Does a PWM to adjust the brightness
+ * @duration int such as the function is called for (duration*101)us
+ */
 void pwm(int clock_duration) {
   for (int _ = 0; _ < clock_duration; _++) {
-    // OE on
     OE_ON;
     _delay_us(100);
-    // OE off
     OE_OFF;
     _delay_us(1);
   }
