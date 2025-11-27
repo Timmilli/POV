@@ -13,7 +13,7 @@ void setup_hall_sensor();
 /**
  * Give for how long the programm has been running in us
  */
-long micros(void);
+uint32_t micros();
 
 /**
  * Get turning speed in turn per s

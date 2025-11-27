@@ -4,12 +4,12 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
-volatile unsigned long last_hall_call = 0UL;
+volatile uint32_t last_hall_call = 0UL;
 volatile float turning_speed = 0;
-volatile unsigned long timer_overflow_count = 0;
+volatile uint32_t timer_overflow_count = 0;
 
 ISR(INT0_vect) {
-  unsigned long current_time = micros();
+  uint32_t current_time = micros();
   turning_speed = 1000000.0 / (float)(current_time - last_hall_call);
   last_hall_call = current_time;
 }
@@ -18,7 +18,7 @@ ISR(INT0_vect) {
 ISR(TIMER1_OVF_vect) { timer_overflow_count++; }
 
 // Initialize Timer0
-void init_timer(void) {
+void init_timer() {
   TCCR1A = 0;
   TCCR1B = 0;
 
@@ -35,10 +35,9 @@ void setup_hall_sensor() {
   EIMSK |= (1 << INT0);            // Turns on INT0
   init_timer();
 }
-unsigned int get_raw_tick_count() { return timer_overflow_count; }
 
 // Return milliseconds since program start
-unsigned long micros(void) {
+uint32_t micros() {
   uint32_t overflow_count;
   uint16_t timer_count;
 
