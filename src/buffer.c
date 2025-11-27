@@ -107,6 +107,14 @@ uint8_t process_ring_buffer(ring_buffer_t *rb) {
     else if (str_cmp(command, "spd")) {
       return GET_SPEED;
     }
+
+    else if (str_cmp(command, "std")) {
+      return CHANGE_MODE_STD_CLOCK;
+    }
+
+    else if (str_cmp(command, "dig")) {
+      return CHANGE_MODE_DIG_CLOCK;
+    }
   }
   return NONE;
 }

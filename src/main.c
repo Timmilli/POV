@@ -10,13 +10,19 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <util/delay.h>
+#include "display_standard_clock.h"
+#include "display_digital_clock.h"
 
 ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
 clock_values_t cv;
-uint16_t datastreak = 0;
 uint16_t mat[NUMBER_OF_POSITIONS];
 uint8_t end_of_string = 0;
+
+typedef enum {
+  STD_CLOCK = 0,  // Standard Clock mode
+  DIG_CLOCK = 1,  // Digital Clock mode
+} display_mode;
 
 /**
  * Receiving interrupt function
@@ -35,6 +41,8 @@ ISR(USART_UDRE_vect) {
   else
     UDRIE_INTERRUPT_OFF;
 }
+
+display_mode current_mode = DIG_CLOCK;
 
 int main(void) {
   /*
@@ -62,42 +70,27 @@ int main(void) {
   // Sending a first string
   uart_send_string("\n\nReady!\n", &tx_buffer);
 
-  // Creating the initial clock matrix
-  merge_matrices(mat, &cv);
+  // Initiate flag to induce immediate redraw
+  uint8_t need_redraw = 1;
 
   // Main loop
   while (1) {
     /*
-     * Creating the datastreak
-     */
-    uint32_t angle = get_current_angle();
-    // Getting the hours and minutes digits
-    if (angle < 360)
-      datastreak = mat[angle / (360 / NUMBER_OF_POSITIONS)];
-    else
-      datastreak = 0;
-
-    // Putting the seconds as the outer led ring
-    uint8_t s = clock_get_seconds(&cv);
-    if (angle > 180) {
-      if (s < (angle - 180) / 6) {
-        datastreak &= ~(0b0000000000000001);
-      } else {
-        datastreak |= 0b0000000000000001;
-      }
-    } else {
-      if (s > 30) {
-        if ((s - 30) < angle / 6) {
-          datastreak &= ~(0b0000000000000001);
-        } else {
-          datastreak |= 0b0000000000000001;
-        }
-      }
+    * Render display according to current mode
+    */
+    switch(current_mode){
+    case STD_CLOCK:{
+      display_standard_clock(mat,&cv,need_redraw);
+      break;
     }
-
-    // Writing the datastreak
-    write_datastreak(datastreak);
-
+    case DIG_CLOCK: {
+      display_digital_clock(mat,&cv,need_redraw);
+      break;
+    }
+    default:
+      break;
+    }
+    need_redraw = 0;
     /*
      * Processing the UART communication
      */
@@ -137,16 +130,23 @@ int main(void) {
       uart_send_string("\n", &tx_buffer);
       break;
     }
+    // Setting mode to standard clock
+    case CHANGE_MODE_STD_CLOCK: {
+      current_mode = STD_CLOCK;
+      uart_send_string("Mode changed!", &tx_buffer);
+      need_redraw = 1;
+      break;
+    }
+    // Setting mode to digital clock
+    case CHANGE_MODE_DIG_CLOCK: {
+      current_mode = DIG_CLOCK;
+      uart_send_string("Mode changed!", &tx_buffer);
+      need_redraw = 1;
+      break;
+    }
     default:
       break;
     }
-
-    /*
-     * Updating the clock values
-     */
-    uint8_t clock_updated = clock_update(&cv);
-    if (clock_updated)
-      merge_matrices(mat, &cv);
   }
 
   return 1;

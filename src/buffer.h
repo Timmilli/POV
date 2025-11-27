@@ -14,6 +14,8 @@ typedef enum {
   SET_HOUR = 1,  // hour needs to be set according to values passed
   GET_HOUR = 2,  // to send the current hour over bluetooth
   GET_SPEED = 3, // get current rotation speed
+  CHANGE_MODE_STD_CLOCK = 4, // switch to standard clock
+  CHANGE_MODE_DIG_CLOCK = 5, // switch to digital clock
 } process_action_e;
 
 /**
