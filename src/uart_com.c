@@ -42,7 +42,7 @@ void uart_send_string(char *str, ring_buffer_t *rb) {
 uint8_t uart_available() { return (UCSR0A & (1 << RXC0)); }
 
 // Récupère un octet de l'UART
-void uart_read_byte(ring_buffer_t *rb) {
+uint8_t uart_read_byte(ring_buffer_t *rb) {
   uint8_t data = UDR0;
-  ring_buffer_put(rb, data);
+  return ring_buffer_put(rb, data);
 }

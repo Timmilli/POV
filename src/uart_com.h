@@ -19,6 +19,6 @@ void uart_send_string(char *, ring_buffer_t *);
 uint8_t uart_available();
 
 // Récupère un octet de l'UART
-void uart_read_byte(ring_buffer_t *);
+uint8_t uart_read_byte(ring_buffer_t *);
 
 #endif // __UART_COM_H__
