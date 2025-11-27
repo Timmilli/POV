@@ -34,8 +34,9 @@ void ring_buffer_init(ring_buffer_t *rb);
  * Adds a byte to the ring buffer, does not check if the buffer is full
  * @param rb non-full ring buffer
  * @param data
+ * @returns 1 if end of string, 0 otherwise
  */
-void ring_buffer_put(ring_buffer_t *rb, uint8_t data);
+uint8_t ring_buffer_put(ring_buffer_t *rb, uint8_t data);
 
 /**
  * Pops a byte from the ring buffer, does not check if the buffer is empty
