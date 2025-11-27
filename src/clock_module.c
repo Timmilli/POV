@@ -1,58 +1,98 @@
 #include "constants.h"
 
+#include "clock_module.h"
 #include "hall_sensor.h"
-#include "led_com.h"
-
 #include <avr/io.h>
 #include <util/delay.h>
 
-unsigned long seconds = 0;
-unsigned long minutes = 0;
-unsigned long hours = 0;
-unsigned long us = 0;
-
-unsigned long last_update_time = 0UL; 
-
-void clock_elapse_time(int delta_us){
-    us += delta_us;
-    if(us >= 1000000UL){
-        seconds += 1UL;
-        us -= 1000000UL;
-    }
-    if(seconds >= 60UL){
-        minutes += 1UL;
-        seconds -= 60UL;
-    }
-    if(minutes >= 60UL){
-        hours += 1UL;
-        minutes -= 60L;
-    }
-    if(hours >= 24){
-        hours -= 24;
-    }
+/**
+ * Initailises the clock
+ * @param cv the clock
+ */
+void clock_init(clock_values_t *cv) {
+  cv->us = 0;
+  cv->seconds = 59;
+  cv->minutes = 59;
+  cv->hours = 1;
+  cv->last_update_time = 0UL;
 }
 
-void clock_update(){
-    unsigned long current_time = micros();
-    clock_elapse_time(current_time - last_update_time);
-    last_update_time = current_time;
+uint8_t clock_elapse_time(clock_values_t *cv, int delta_us) {
+  uint8_t clock_updated = 0;
+  cv->us += delta_us;
+  if (cv->us >= 1000000UL) {
+    cv->seconds += 1;
+    clock_updated += 1;
+    cv->us -= 1000000UL;
+  }
+  if (cv->seconds >= 60) {
+    cv->minutes += 1;
+    clock_updated += 1;
+    cv->seconds = 0;
+  }
+  if (cv->minutes >= 60) {
+    cv->hours += 1;
+    clock_updated += 1;
+    cv->minutes = 0;
+  }
+  if (cv->hours >= 24) {
+    cv->hours = 0;
+    clock_updated += 1;
+  }
+  return clock_updated;
 }
 
-long clock_get_seconds(){
-    return seconds;
+/**
+ * Updates the clock, to now!
+ */
+uint8_t clock_update(clock_values_t *cv) {
+  uint32_t current_time = micros();
+  uint8_t clock_updated =
+      clock_elapse_time(cv, current_time - cv->last_update_time);
+  cv->last_update_time = current_time;
+  return clock_updated;
 }
 
-long clock_get_minutes(){
-    return minutes;
+/**
+ * Sets up the current time of the clock
+ * @param s the seconds
+ * @param min the minutes
+ * @param h the hours
+ **/
+void clock_set_time(clock_values_t *cv, uint8_t s, uint8_t min, uint8_t h) {
+  cv->last_update_time = micros();
+  cv->seconds = s;
+  cv->minutes = min;
+  cv->hours = h;
 }
 
-long clock_get_hours(){
-    return hours;
-}
+/**
+ * Gets the seconds of the clock
+ * @returns the seconds of the clock
+ */
+uint8_t clock_get_seconds(clock_values_t *cv) { return cv->seconds; }
 
-void clock_set_time(long s,long min,long h){
-    last_update_time = micros();
-    seconds = s;
-    minutes = min;
-    hours = h;
+/**
+ * Gets the minutes of the clock
+ * @returns the minutes of the clock
+ */
+uint8_t clock_get_minutes(clock_values_t *cv) { return cv->minutes; }
+
+/**
+ * Gets the hours of the clock
+ * @returns the hours of the clock
+ */
+uint8_t clock_get_hours(clock_values_t *cv) { return cv->hours; }
+
+/**
+ * Transforms the clock values into a string
+ * @param str 16-character long string with "hh:mm:ss\n" format
+ */
+void clock_to_string(clock_values_t *cv, char str[16]) {
+  str[0] = '0' + cv->hours / 10;
+  str[1] = '0' + cv->hours % 10;
+  str[3] = '0' + cv->minutes / 10;
+  str[4] = '0' + cv->minutes % 10;
+  str[6] = '0' + cv->seconds / 10;
+  str[7] = '0' + cv->seconds % 10;
 }
