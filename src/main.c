@@ -14,7 +14,7 @@ ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
 clock_values_t cv;
 uint16_t datastreak = 0;
-uint16_t mat[NUMBER_OF_POSITIONS] = {};
+uint16_t mat[NUMBER_OF_POSITIONS];
 uint8_t end_of_string = 0;
 
 /**
@@ -36,64 +36,91 @@ ISR(USART_UDRE_vect) {
 }
 
 int main(void) {
+  /*
+   * Initializing everything
+   */
   setup_led_driver_com();
-  uart_init(MYUBRR);
+  uart_init(MYUBRR); // TODO remove the macro as uart has access to it
   setup_hall_sensor();
 
   ring_buffer_init(&tx_buffer);
   ring_buffer_init(&rx_buffer);
+
   clock_init(&cv);
 
-  uint8_t i = 0;
-  char str[16] = "hh:mm:ss\n";
+  // This is the format used in answers in UART communication
+  char clock_format_str[16] = "hh:mm:ss\n";
 
-  sei(); // activate interrupts
+  // Activating global interrupts
+  sei();
 
+  // Sending a first string
   uart_send_string("\n\nReady!\n", &tx_buffer);
 
+  // Creating the initial clock matrix
   merge_matrices(mat, &cv);
 
+  // Main loop
   while (1) {
-    uint32_t angle = get_current_angle(); // degré
+    /*
+     * Creating the datastreak
+     */
+    uint32_t angle = get_current_angle();
+    // Getting the hours and minutes digits
     if (angle < 360)
       datastreak = mat[angle / (360 / NUMBER_OF_POSITIONS)];
     else
       datastreak = 0;
 
+    // Putting the seconds as the outer led ring
     if (clock_get_seconds(&cv) < angle / 6) {
       datastreak &= ~(0b0000000000000001);
     } else {
       datastreak |= 0b0000000000000001;
     }
 
+    // Writing the datastreak
     write_datastreak(datastreak);
 
+    /*
+     * Processing the UART communication
+     */
     process_action_e val = NONE;
+    // If a full string has been received
     if (end_of_string == 1) {
+      // Process the buffer
       val = process_ring_buffer(&rx_buffer);
       end_of_string = 0;
     }
 
+    // According to the parsing
     switch (val) {
+      // Setting another time
     case SET_HOUR:
       ring_buffer_update_clock(&rx_buffer, &cv);
-      clock_to_string(&cv, str);
-      uart_send_string("Clock set to: ", &tx_buffer);
-      uart_send_string(str, &tx_buffer);
       merge_matrices(mat, &cv);
+      // Feedback to the user
+      clock_to_string(&cv, clock_format_str);
+      uart_send_string("Clock set to: ", &tx_buffer);
+      uart_send_string(clock_format_str, &tx_buffer);
       break;
+      // Or getting the time
     case GET_HOUR:
-      clock_to_string(&cv, str);
+      clock_to_string(&cv, clock_format_str);
       uart_send_string("Current clock: ", &tx_buffer);
-      uart_send_string(str, &tx_buffer);
+      uart_send_string(clock_format_str, &tx_buffer);
       break;
     default:
       break;
     }
 
+    /*
+     * Updating the clock values
+     */
     uint8_t clock_updated = clock_update(&cv);
     if (clock_updated)
       merge_matrices(mat, &cv);
   }
+
   return 1;
 }
