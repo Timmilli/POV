@@ -109,6 +109,8 @@ uint8_t process_ring_buffer(ring_buffer_t *rb) {
       return CHANGE_MODE_STD_CLOCK;
     else if (str_cmp(command, "dig"))
       return CHANGE_MODE_DIG_CLOCK;
+    else if (str_cmp(command, "img"))
+      return CHANGE_MODE_IMAGE;
   }
   return NONE;
 }

@@ -3,10 +3,10 @@
 #include "buffer.h"
 #include "clock_module.h"
 #include "display_digital_clock.h"
+#include "display_image.h"
 #include "display_standard_clock.h"
 #include "hall_sensor.h"
 #include "led_com.h"
-#include "merge_matrices.h"
 #include "uart_com.h"
 #include <avr/interrupt.h>
 #include <avr/io.h>
@@ -18,13 +18,13 @@ ring_buffer_t rx_buffer;
 clock_values_t cv;
 uint16_t mat[NUMBER_OF_POSITIONS];
 uint8_t end_of_string = 0;
-display_mode_e mode = STRAIGHT_CLOCK;
 uint8_t clock_updated = 1;
 
 typedef enum {
   STD_CLOCK = 0, // Standard Clock mode
   DIG_CLOCK = 1, // Digital Clock mode
-} display_mode;
+  IMG = 2,       // Image mode
+} display_mode_e;
 
 /**
  * Receiving interrupt function
@@ -44,7 +44,7 @@ ISR(USART_UDRE_vect) {
     UDRIE_INTERRUPT_OFF;
 }
 
-display_mode current_mode = DIG_CLOCK;
+display_mode_e current_mode = DIG_CLOCK;
 
 int main(void) {
   /*
@@ -87,6 +87,10 @@ int main(void) {
     }
     case DIG_CLOCK: {
       display_digital_clock(mat, &cv, need_redraw);
+      break;
+    }
+    case IMG: {
+      display_image();
       break;
     }
     default:
@@ -143,6 +147,12 @@ int main(void) {
       current_mode = DIG_CLOCK;
       uart_send_string("Mode changed!", &tx_buffer);
       need_redraw = 1;
+      break;
+    }
+      // Setting mode to image
+    case CHANGE_MODE_IMAGE: {
+      current_mode = IMG;
+      uart_send_string("Mode changed!", &tx_buffer);
       break;
     }
     default:
