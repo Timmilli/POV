@@ -1,14 +1,12 @@
 #include "constants.h"
 
 #include "buffer.h"
-#include "classic_clock.h"
 #include "clock_module.h"
 #include "display_digital_clock.h"
 #include "display_standard_clock.h"
 #include "hall_sensor.h"
 #include "led_com.h"
 #include "merge_matrices.h"
-#include "straight_clock.h"
 #include "uart_com.h"
 #include <avr/interrupt.h>
 #include <avr/io.h>
