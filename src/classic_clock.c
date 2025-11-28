@@ -4,8 +4,8 @@
 #include "clock_module.h"
 #include "hall_sensor.h"
 #include "led_com.h"
-
 #include <avr/io.h>
+#include <stdlib.h>
 #include <util/delay.h>
 
 #define NUMBER_OF_POSITIONS 120
@@ -56,7 +56,6 @@ uint16_t redraw_clock(uint16_t *mat, clock_values_t *cv) {
 clock_values_t cv;
 
 uint16_t classic_clock_main() {
-  srand(time(NULL));
   setup_hall_sensor();
   setup_led_driver_com();
   clock_init(&cv);
