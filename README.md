@@ -20,10 +20,10 @@ To set the time to the value hh:mm:ss: `setHHMMSS`
 
 ### Change mode command
 
-To change the current mode: `modXXX` where XXX can be:
-- `CLS` for a classic clock
-- `STR` for a straight clock
-- `IMG` for an image
+To change the current mode:
+- `std` for a standard clock
+- `dig` for a straight clock
+- `img` for an predefined image
 
 ### Other command
 
