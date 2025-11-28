@@ -10,10 +10,10 @@
  * Defines the action available from Bluetooth commands
  */
 typedef enum {
-  NONE = 0,      // no command, or command not recognized
-  SET_HOUR = 1,  // hour needs to be set according to values passed
-  GET_HOUR = 2,  // to send the current hour over bluetooth
-  GET_SPEED = 3, // get current rotation speed
+  NONE = 0,                  // no command, or command not recognized
+  SET_HOUR = 1,              // hour needs to be set according to values passed
+  GET_HOUR = 2,              // to send the current hour over bluetooth
+  GET_SPEED = 3,             // get current rotation speed
   CHANGE_MODE_STD_CLOCK = 4, // switch to standard clock
   CHANGE_MODE_DIG_CLOCK = 5, // switch to digital clock
 } process_action_e;
@@ -94,17 +94,5 @@ uint8_t process_ring_buffer(ring_buffer_t *rb);
  * @param cv the clock to update the values of
  */
 void ring_buffer_update_clock(ring_buffer_t *rb, clock_values_t *cv);
-
-/**
- * Updates the current mode
- * @param rb is the ring buffer to get the mode from
- * @returns the mode to update to, or CLASSIC_CLOCK by default
- *
- * Accepted values:
- * - CLS (classic)
- * - STR (straight)
- * - IMG (image)
- */
-display_mode_e ring_buffer_update_mode(ring_buffer_t *rb);
 
 #endif // __BUFFER_H__
