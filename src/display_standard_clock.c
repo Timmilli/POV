@@ -1,9 +1,9 @@
 #include "constants.h"
 
 #include "clock_module.h"
+#include "display_standard_clock.h"
 #include "hall_sensor.h"
 #include "led_com.h"
-
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -49,7 +49,7 @@ uint16_t draw_clock(uint32_t angle, clock_values_t *cv) {
   return datastreak;
 }
 
-uint16_t redraw_clock(uint16_t *mat, clock_values_t *cv) {
+void redraw_clock(uint16_t *mat, clock_values_t *cv) {
   uint8_t degrees_per_pixel = (360 / NUMBER_OF_POSITIONS);
   for (int i = 0; i < NUMBER_OF_POSITIONS; i++) {
     mat[i] = draw_clock(i * degrees_per_pixel, cv);

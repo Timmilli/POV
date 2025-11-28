@@ -1,6 +1,7 @@
 #include "constants.h"
 
 #include "clock_module.h"
+#include "display_digital_clock.h"
 #include "hall_sensor.h"
 #include "led_com.h"
 #include "merge_matrices.h"
