@@ -76,4 +76,14 @@
 #define UDRIE_INTERRUPT_OFF UCSR0B &= ~(1 << UDRIE0)
 #endif
 
+/*
+ * Display modes
+ */
+
+typedef enum {
+  CLASSIC_CLOCK = 10,
+  STRAIGHT_CLOCK = 20,
+  IMAGE = 30,
+} display_mode_e;
+
 #endif // __CONSTANTS_H__
