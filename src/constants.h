@@ -1,4 +1,3 @@
-
 #ifndef __CONSTANTS_H__
 #define __CONSTANTS_H__
 
@@ -16,10 +15,10 @@
 #define BAUD 38400
 #endif
 #ifndef MYUBRR
-#define MYUBRR F_CPU / 8 / BAUD - 1
+#define MYUBRR (F_CPU / 8 / BAUD - 1)
 #endif
-#ifndef  HALL_SENSOR_PIN
-#define  HALL_SENSOR_PIN PD2
+#ifndef HALL_SENSOR_PIN
+#define HALL_SENSOR_PIN PD2
 #endif
 
 /*
@@ -53,5 +52,38 @@
 #ifndef OE_OFF
 #define OE_OFF PORTC &= ~(1 << PC1)
 #endif
+
+/*
+ * Straight clock constants
+ */
+
+#define NUMBER_OF_POSITIONS 120
+
+/*
+ * Ring buffer specific constants
+ */
+
+#define RING_BUFFER_SIZE 64
+
+/*
+ * USART specific constants
+ */
+
+#ifndef UDRIE_INTERRUPT_ON
+#define UDRIE_INTERRUPT_ON UCSR0B |= (1 << UDRIE0)
+#endif
+#ifndef UDRIE_INTERRUPT_OFF
+#define UDRIE_INTERRUPT_OFF UCSR0B &= ~(1 << UDRIE0)
+#endif
+
+/*
+ * Display modes
+ */
+
+typedef enum {
+  CLASSIC_CLOCK = 10,
+  STRAIGHT_CLOCK = 20,
+  IMAGE = 30,
+} display_mode_e;
 
 #endif // __CONSTANTS_H__
