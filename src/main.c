@@ -3,6 +3,8 @@
 #include "buffer.h"
 #include "classic_clock.h"
 #include "clock_module.h"
+#include "display_digital_clock.h"
+#include "display_standard_clock.h"
 #include "hall_sensor.h"
 #include "led_com.h"
 #include "merge_matrices.h"
@@ -12,8 +14,6 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <util/delay.h>
-#include "display_standard_clock.h"
-#include "display_digital_clock.h"
 
 ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
@@ -24,8 +24,8 @@ display_mode_e mode = STRAIGHT_CLOCK;
 uint8_t clock_updated = 1;
 
 typedef enum {
-  STD_CLOCK = 0,  // Standard Clock mode
-  DIG_CLOCK = 1,  // Digital Clock mode
+  STD_CLOCK = 0, // Standard Clock mode
+  DIG_CLOCK = 1, // Digital Clock mode
 } display_mode;
 
 /**
@@ -80,15 +80,15 @@ int main(void) {
   // Main loop
   while (1) {
     /*
-    * Render display according to current mode
-    */
-    switch(current_mode){
-    case STD_CLOCK:{
-      display_standard_clock(mat,&cv,need_redraw);
+     * Render display according to current mode
+     */
+    switch (current_mode) {
+    case STD_CLOCK: {
+      display_standard_clock(mat, &cv, need_redraw);
       break;
     }
     case DIG_CLOCK: {
-      display_digital_clock(mat,&cv,need_redraw);
+      display_digital_clock(mat, &cv, need_redraw);
       break;
     }
     default:
@@ -133,23 +133,14 @@ int main(void) {
       uart_send_string(blank_format_str, &tx_buffer);
       break;
     }
-      // Or changing the mode
-    case CHANGE_MODE: {
-      mode = ring_buffer_update_mode(&rx_buffer);
-      // Feedback to the user
-      uart_send_string("Current mode: ", &tx_buffer);
-      sprintf(blank_format_str, "%d\n", mode);
-      uart_send_string(blank_format_str, &tx_buffer);
-      break;
-    }
-    // Setting mode to standard clock
+      // Setting mode to standard clock
     case CHANGE_MODE_STD_CLOCK: {
       current_mode = STD_CLOCK;
       uart_send_string("Mode changed!", &tx_buffer);
       need_redraw = 1;
       break;
     }
-    // Setting mode to digital clock
+      // Setting mode to digital clock
     case CHANGE_MODE_DIG_CLOCK: {
       current_mode = DIG_CLOCK;
       uart_send_string("Mode changed!", &tx_buffer);
