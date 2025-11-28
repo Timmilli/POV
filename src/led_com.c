@@ -1,10 +1,13 @@
 #include "constants.h"
+
+#include "constants.h"
 #include "led_com.h"
 #include <avr/io.h>
-#include <stdlib.h>
-#include <time.h>
 #include <util/delay.h>
 
+/**
+ * Sets up the communication with the led driver
+ */
 void setup_led_driver_com() {
   // Setup pins in writing mode
   DDRB |= (1 << PB3) | (1 << PB5); // SDI | CLK
@@ -14,67 +17,37 @@ void setup_led_driver_com() {
   DDRD &= ~(1 << PD2); // HALL
 }
 
+/**
+ * Writes the datastreak
+ * @param datastreak is corresponding to the decimal value of the binary
+ * encoding of the leds powered on
+ */
 void write_datastreak(uint16_t datastreak) {
   for (int i = 0; i < 16; i++) {
     if (datastreak & (1 << i)) {
-      // SDI
-      // turns on
       SDI_ON;
     } else {
-      // SDI
-      // shuts off
       SDI_OFF;
     }
 
-    // CLK
-    // turns on
     CLK_ON;
-    // CLK
-    // shuts off
     CLK_OFF;
   }
 
-  // LE
-  // turns on
   LE_ON;
-  // turns off
   LE_OFF;
 }
 
-void pwm(int clock_duration) {
+/**
+ * Does a PWM to adjust the brightness
+ * @param duration is the number of times the function is called making it being
+ * called for (duration*101)us
+ */
+void pwm(uint8_t clock_duration) {
   for (int _ = 0; _ < clock_duration; _++) {
-    // OE on
     OE_ON;
-    _delay_us(1000);
-    // OE off
+    _delay_us(100);
     OE_OFF;
     _delay_us(1);
   }
-}
-
-int led_com_main(void) {
-  srand(time(NULL));
-
-  setup_led_driver_com();
-
-  uint16_t datastreak = 0b1111110001111111;
-  int led_state = 1;
-  uint8_t magnet_state = PORTD & (1 << PD2);
-
-  write_datastreak(datastreak);
-  while (1) {
-    if (magnet_state != (PORTD & (1 << PD2))) {
-      led_state = ~led_state;
-      magnet_state = PORTD & (1 << PD2);
-    }
-    if (led_state) {
-      // OE on
-      OE_ON;
-      _delay_us(100);
-      // OE off
-      OE_OFF;
-      _delay_us(1);
-    }
-  }
-  return 1;
 }

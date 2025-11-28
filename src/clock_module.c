@@ -22,22 +22,21 @@ uint8_t clock_elapse_time(clock_values_t *cv, int delta_us) {
   cv->us += delta_us;
   if (cv->us >= 1000000UL) {
     cv->seconds += 1;
-    clock_updated += 1;
     cv->us -= 1000000UL;
   }
   if (cv->seconds >= 60) {
     cv->minutes += 1;
-    clock_updated += 1;
+    clock_updated = 1;
     cv->seconds = 0;
   }
   if (cv->minutes >= 60) {
     cv->hours += 1;
-    clock_updated += 1;
+    clock_updated = 1;
     cv->minutes = 0;
   }
   if (cv->hours >= 24) {
     cv->hours = 0;
-    clock_updated += 1;
+    clock_updated = 1;
   }
   return clock_updated;
 }
