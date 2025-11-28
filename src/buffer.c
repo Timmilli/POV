@@ -88,6 +88,9 @@ uint8_t str_cmp(char fstr[3], char sstr[3]) {
  *
  * Accepted formats :
  * - setHHMMSS ('set' then 6 digits)
+ * - get
+ * - spd
+ * - modXXX (see ring_buffer_update_mode for accepted values)
  */
 uint8_t process_ring_buffer(ring_buffer_t *rb) {
   if (ring_buffer_available_bytes(rb) >= 3) {
@@ -96,25 +99,16 @@ uint8_t process_ring_buffer(ring_buffer_t *rb) {
       command[i] = ring_buffer_get(rb);
     }
 
-    if (str_cmp(command, "set")) {
+    if (str_cmp(command, "set"))
       return SET_HOUR;
-    }
-
-    else if (str_cmp(command, "get")) {
+    else if (str_cmp(command, "get"))
       return GET_HOUR;
-    }
-
-    else if (str_cmp(command, "spd")) {
+    else if (str_cmp(command, "spd"))
       return GET_SPEED;
-    }
-
-    else if (str_cmp(command, "std")) {
+    else if (str_cmp(command, "std"))
       return CHANGE_MODE_STD_CLOCK;
-    }
-
-    else if (str_cmp(command, "dig")) {
+    else if (str_cmp(command, "dig"))
       return CHANGE_MODE_DIG_CLOCK;
-    }
   }
   return NONE;
 }
@@ -138,4 +132,31 @@ void ring_buffer_update_clock(ring_buffer_t *rb, clock_values_t *cv) {
   uint8_t s = 10 * tens + units;
 
   clock_set_time(cv, s, m, h);
+}
+
+/**
+ * Updates the current mode
+ * @param rb is the ring buffer to get the mode from
+ * @returns the mode to update to, or CLASSIC_CLOCK by default
+ *
+ * Accepted values:
+ * - CLS (classic)
+ * - STR (straight)
+ * - IMG (image)
+ */
+display_mode_e ring_buffer_update_mode(ring_buffer_t *rb) {
+  if (ring_buffer_available_bytes(rb) >= 3) {
+    char mode[3] = "";
+    for (uint8_t i = 0; i < 3; i++) {
+      mode[i] = ring_buffer_get(rb);
+    }
+
+    if (str_cmp(mode, "CLS"))
+      return CLASSIC_CLOCK;
+    else if (str_cmp(mode, "STR"))
+      return STRAIGHT_CLOCK;
+    else if (str_cmp(mode, "IMG"))
+      return IMAGE;
+  }
+  return CLASSIC_CLOCK;
 }

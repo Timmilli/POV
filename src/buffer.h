@@ -95,4 +95,16 @@ uint8_t process_ring_buffer(ring_buffer_t *rb);
  */
 void ring_buffer_update_clock(ring_buffer_t *rb, clock_values_t *cv);
 
+/**
+ * Updates the current mode
+ * @param rb is the ring buffer to get the mode from
+ * @returns the mode to update to, or CLASSIC_CLOCK by default
+ *
+ * Accepted values:
+ * - CLS (classic)
+ * - STR (straight)
+ * - IMG (image)
+ */
+display_mode_e ring_buffer_update_mode(ring_buffer_t *rb);
+
 #endif // __BUFFER_H__

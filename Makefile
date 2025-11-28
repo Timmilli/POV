@@ -45,7 +45,7 @@ os:
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	avr-gcc -mmcu=$(MMCU) $(CFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/$(FILE).elf: $(SRC_DIR)/$(FILE).c $(SRC)
+$(BUILD_DIR)/$(FILE).elf: $(SRC_DIR)/$(FILE).c $(OBJ)
 	avr-gcc -mmcu=$(MMCU) $(CFLAGS) $(INCLUDE_FLAGS) -o $@ $^
 
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
