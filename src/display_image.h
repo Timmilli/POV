@@ -6,6 +6,6 @@
 #include "clock_module.h"
 #include <avr/io.h>
 
-void display_image(uint16_t mat[NUMBER_OF_POSITIONS], clock_values_t *cv);
+void display_image();
 
 #endif // __DISPLAY_IMAGE_H__
