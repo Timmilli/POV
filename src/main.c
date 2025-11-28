@@ -12,15 +12,21 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <util/delay.h>
+#include "display_standard_clock.h"
+#include "display_digital_clock.h"
 
 ring_buffer_t tx_buffer;
 ring_buffer_t rx_buffer;
 clock_values_t cv;
-uint16_t datastreak = 0;
 uint16_t mat[NUMBER_OF_POSITIONS];
 uint8_t end_of_string = 0;
 display_mode_e mode = STRAIGHT_CLOCK;
 uint8_t clock_updated = 1;
+
+typedef enum {
+  STD_CLOCK = 0,  // Standard Clock mode
+  DIG_CLOCK = 1,  // Digital Clock mode
+} display_mode;
 
 /**
  * Receiving interrupt function
@@ -39,6 +45,8 @@ ISR(USART_UDRE_vect) {
   else
     UDRIE_INTERRUPT_OFF;
 }
+
+display_mode current_mode = DIG_CLOCK;
 
 int main(void) {
   /*
@@ -66,8 +74,27 @@ int main(void) {
   // Sending a first string
   uart_send_string("\n\nReady!\n", &tx_buffer);
 
+  // Initiate flag to induce immediate redraw
+  uint8_t need_redraw = 1;
+
   // Main loop
   while (1) {
+    /*
+    * Render display according to current mode
+    */
+    switch(current_mode){
+    case STD_CLOCK:{
+      display_standard_clock(mat,&cv,need_redraw);
+      break;
+    }
+    case DIG_CLOCK: {
+      display_digital_clock(mat,&cv,need_redraw);
+      break;
+    }
+    default:
+      break;
+    }
+    need_redraw = 0;
     /*
      * Processing the UART communication
      */
@@ -115,27 +142,23 @@ int main(void) {
       uart_send_string(blank_format_str, &tx_buffer);
       break;
     }
+    // Setting mode to standard clock
+    case CHANGE_MODE_STD_CLOCK: {
+      current_mode = STD_CLOCK;
+      uart_send_string("Mode changed!", &tx_buffer);
+      need_redraw = 1;
+      break;
+    }
+    // Setting mode to digital clock
+    case CHANGE_MODE_DIG_CLOCK: {
+      current_mode = DIG_CLOCK;
+      uart_send_string("Mode changed!", &tx_buffer);
+      need_redraw = 1;
+      break;
+    }
     default:
       break;
     }
-
-    /*
-     * Updating the datastreak according to the mode selected
-     */
-    if (mode == CLASSIC_CLOCK)
-      datastreak = 0;
-    else if (mode == STRAIGHT_CLOCK)
-      datastreak = straight_clock_main(mat, &cv, clock_updated);
-    else if (mode == IMAGE)
-      datastreak = 1;
-
-    // Writing the datastreak
-    write_datastreak(datastreak);
-
-    /*
-     * Updating the clock values
-     */
-    clock_updated = clock_update(&cv);
   }
 
   return 1;
