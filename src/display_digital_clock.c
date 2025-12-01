@@ -9,7 +9,8 @@
 #include <util/delay.h>
 
 void display_digital_clock(uint16_t mat[NUMBER_OF_POSITIONS],
-                           clock_values_t *cv, uint8_t force_redraw) {
+                           clock_values_t *cv, uint8_t force_redraw,
+                           uint8_t accelerated) {
   uint16_t datastreak = 0b0;
   /*
    * Creating the datastreak
@@ -45,7 +46,7 @@ void display_digital_clock(uint16_t mat[NUMBER_OF_POSITIONS],
   /*
    * Updating the clock values
    */
-  uint8_t clock_updated = clock_update(cv);
+  uint8_t clock_updated = clock_update(cv, accelerated);
   if (clock_updated >= 2 ||
       force_redraw) // Check if the minutes have been updated
     merge_matrices(mat, cv);
