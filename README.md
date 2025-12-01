@@ -29,3 +29,4 @@ To change the current mode:
 ### Other command
 
 To get the current speed: `spd`
+To accelerate time by x100 : `acc`
