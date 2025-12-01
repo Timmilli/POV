@@ -57,7 +57,9 @@
  * Straight clock constants
  */
 
-#define NUMBER_OF_POSITIONS 120
+#ifndef NUMBER_OF_POSITIONS
+#define NUMBER_OF_POSITIONS 180
+#endif
 
 /*
  * Ring buffer specific constants
