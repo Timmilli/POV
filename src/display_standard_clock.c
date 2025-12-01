@@ -40,11 +40,11 @@ uint16_t draw_cadran(uint32_t angle) {
 }
 uint16_t draw_clock(uint32_t angle, clock_values_t *cv) {
   uint16_t datastreak = draw_cadran(angle);
-  datastreak |= draw_fork(angle, (180 - clock_get_seconds(cv) * 6) % 360, 13);
-  datastreak |= draw_fork(angle, (180 - clock_get_minutes(cv) * 6) % 360, 10);
+  datastreak |= draw_fork(angle, (540 - clock_get_seconds(cv) * 6) % 360, 13);
+  datastreak |= draw_fork(angle, (540 - clock_get_minutes(cv) * 6) % 360, 10);
   datastreak |= draw_fork(
       angle,
-      (180 - (clock_get_hours(cv) % 12) * 30 - clock_get_minutes(cv) / 2) % 360,
+      (540 - (clock_get_hours(cv) % 12) * 30 - clock_get_minutes(cv) / 2) % 360,
       6);
   return datastreak;
 }
@@ -57,9 +57,14 @@ void draw_clock_to_buffer(uint16_t *mat, clock_values_t *cv) {
 }
 
 void display_standard_clock(uint16_t mat[NUMBER_OF_POSITIONS],
-                            clock_values_t *cv, uint8_t force_redraw) {
+                            clock_values_t *cv, uint8_t force_redraw,
+                            uint8_t accelerated) {
   uint16_t datastreak = 0b0;
-  uint8_t need_redraw = clock_update(cv) || force_redraw;
+  uint8_t need_redraw;
+  if (accelerated)
+    need_redraw = (clock_update(cv, accelerated) > 1) || force_redraw;
+  else
+    need_redraw = clock_update(cv, accelerated) || force_redraw;
   if (need_redraw) {
     draw_clock_to_buffer(mat, cv);
   }
