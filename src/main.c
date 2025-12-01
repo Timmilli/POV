@@ -20,6 +20,7 @@ clock_values_t cv;
 uint16_t mat[NUMBER_OF_POSITIONS];
 uint8_t end_of_string = 0;
 uint8_t clock_updated = 1;
+uint8_t accelerated = 0;
 
 typedef enum {
   STD_CLOCK = 0, // Standard Clock mode
@@ -46,7 +47,7 @@ ISR(USART_UDRE_vect) {
     UDRIE_INTERRUPT_OFF;
 }
 
-display_mode_e current_mode = TEXT;
+display_mode_e current_mode = STD_CLOCK;
 
 int main(void) {
   /*
@@ -84,15 +85,15 @@ int main(void) {
      */
     switch (current_mode) {
     case STD_CLOCK: {
-      display_standard_clock(mat, &cv, need_redraw);
+      display_standard_clock(mat, &cv, need_redraw, accelerated);
       break;
     }
     case DIG_CLOCK: {
-      display_digital_clock(mat, &cv, need_redraw);
+      display_digital_clock(mat, &cv, need_redraw, accelerated);
       break;
     }
     case IMG: {
-      display_image();
+      display_image(&cv, accelerated);
       break;
     }
     case TEXT: {
@@ -164,6 +165,12 @@ int main(void) {
       // Setting mode to image
     case CHANGE_MODE_TEXT: {
       current_mode = TEXT;
+      uart_send_string("Mode changed!", &tx_buffer);
+      break;
+    }
+      // Accelerating the clock
+    case ACCELERATING: {
+      accelerated = ~accelerated;
       uart_send_string("Mode changed!", &tx_buffer);
       break;
     }

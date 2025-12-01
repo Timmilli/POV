@@ -113,6 +113,8 @@ uint8_t process_ring_buffer(ring_buffer_t *rb) {
       return CHANGE_MODE_IMAGE;
     else if (str_cmp(command, "txt"))
       return CHANGE_MODE_TEXT;
+    else if (str_cmp(command, "acc"))
+      return ACCELERATING;
   }
   return NONE;
 }

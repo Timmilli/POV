@@ -7,6 +7,7 @@
 #include <avr/io.h>
 
 void display_standard_clock(uint16_t mat[NUMBER_OF_POSITIONS],
-                            clock_values_t *cv, uint8_t force_redraw);
+                            clock_values_t *cv, uint8_t force_redraw,
+                            uint8_t accelerated);
 
 #endif
