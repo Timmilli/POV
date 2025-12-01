@@ -27,6 +27,5 @@ To change the current mode:
 - `txt` for a clock with a text display
 
 ### Other command
-
-To get the current speed: `spd`
-To accelerate time by x100 : `acc`
+- `spd` to get the current speed
+- `acc` to accelerate time by x100 
