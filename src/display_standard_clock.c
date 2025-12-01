@@ -7,8 +7,8 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define CLOCK_FORK_THICKNESS 2
-#define CLOCK_TICK_THICKNESS 2
+#define CLOCK_FORK_THICKNESS 3
+#define CLOCK_TICK_THICKNESS 3
 
 uint16_t uint16_distance(int x, int y) {
   if (x < y) {

@@ -97,7 +97,7 @@ int main(void) {
       break;
     }
     case TEXT: {
-      display_text_clock(mat, &cv, need_redraw);
+      display_text_clock(mat, &cv, need_redraw, accelerated);
       break;
     }
     default:
