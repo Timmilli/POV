@@ -24,7 +24,7 @@ def pixel_to_led(value):
 
 # === LOAD IMAGE ===
 im = Image.open(IMAGE_FILE).convert("L")
-height, width = im.size
+width, height = im.size
 pixels = im.load()
 
 # === BUILD MATRIX ===
@@ -33,12 +33,11 @@ display_matrix = []
 for y in range(height):          # ligne = LED MSB → LSB (haut → bas)
     row = []
     for x in range(width):       # colonne = défilement POV
-        row.append(pixel_to_led(pixels[y, x]))
+        row.append(pixel_to_led(pixels[x, y]))
     display_matrix.append(row)
 
 # === WRITE encoding.h ===
-FINAL_RES = width          # tu peux changer si besoin
-matrix_name = "alphabet"   # nom du tableau dans le .h
+matrix_name = "alphabet"  
 
 with open(OUTPUT_FILE, "w") as f:
 
@@ -48,7 +47,7 @@ with open(OUTPUT_FILE, "w") as f:
         f"#define __ALPHABET_H__\n"
         f"#include \"constants.h\"\n"
         f"#include <avr/io.h>\n\n"
-        f"#define TOTAL_SIZE {height}\n\n"
+        f"#define TOTAL_SIZE {width}\n\n"
     )
 
     # MATRIX
