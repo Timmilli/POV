@@ -3,12 +3,12 @@
 #include "clock_module.h"
 #include "display_image.h"
 #include "hall_sensor.h"
-#include "image.h"
 #include "led_com.h"
+#include "logo_std.h"
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
-void display_image() {
+void display_image(clock_values_t *cv, uint8_t accelerated) {
   uint16_t datastreak = 0b0;
   /*
    * Creating the datastreak
@@ -23,4 +23,6 @@ void display_image() {
 
   // Writing the datastreak
   write_datastreak(datastreak);
+
+  clock_update(cv, accelerated);
 }
