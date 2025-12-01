@@ -5,6 +5,7 @@
 #include "display_digital_clock.h"
 #include "display_image.h"
 #include "display_standard_clock.h"
+#include "display_text_clock.h"
 #include "hall_sensor.h"
 #include "led_com.h"
 #include "uart_com.h"
@@ -24,6 +25,7 @@ typedef enum {
   STD_CLOCK = 0, // Standard Clock mode
   DIG_CLOCK = 1, // Digital Clock mode
   IMG = 2,       // Image mode
+  TEXT = 3,      // Text mode
 } display_mode_e;
 
 /**
@@ -44,7 +46,7 @@ ISR(USART_UDRE_vect) {
     UDRIE_INTERRUPT_OFF;
 }
 
-display_mode_e current_mode = DIG_CLOCK;
+display_mode_e current_mode = TEXT;
 
 int main(void) {
   /*
@@ -91,6 +93,10 @@ int main(void) {
     }
     case IMG: {
       display_image();
+      break;
+    }
+    case TEXT: {
+      display_text_clock(mat, &cv, need_redraw);
       break;
     }
     default:
@@ -152,6 +158,12 @@ int main(void) {
       // Setting mode to image
     case CHANGE_MODE_IMAGE: {
       current_mode = IMG;
+      uart_send_string("Mode changed!", &tx_buffer);
+      break;
+    }
+      // Setting mode to image
+    case CHANGE_MODE_TEXT: {
+      current_mode = TEXT;
       uart_send_string("Mode changed!", &tx_buffer);
       break;
     }
