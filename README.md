@@ -24,6 +24,7 @@ To change the current mode:
 - `std` for a standard clock
 - `dig` for a straight clock
 - `img` for an predefined image
+- `txt` for a clock with a text display
 
 ### Other command
 

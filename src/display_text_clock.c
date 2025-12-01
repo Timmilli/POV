@@ -54,8 +54,8 @@ void display_text_clock(uint16_t mat[NUMBER_OF_POSITIONS], clock_values_t *cv,
   if (need_redraw) {
     display_clear(mat);
     clock_to_string(cv, clock_str);
-    display_string(30, mat, " HELLO! ", 0);
-    display_string(30, mat, clock_str, 1);
+    display_string(90, mat, " HELLO! ", 0);
+    display_string(90, mat, clock_str, 1);
   }
   uint16_t datastreak = 0b0;
 
