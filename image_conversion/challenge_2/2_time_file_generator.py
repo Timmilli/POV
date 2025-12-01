@@ -38,8 +38,8 @@ for y in range(height):          # ligne = LED MSB → LSB (haut → bas)
     display_matrix.append(row)
 
 # === WRITE encoding.h ===
-FINAL_RES = width          # tu peux changer si besoin
-matrix_name = "alphabet"   # nom du tableau dans le .h
+FINAL_RES = width          
+matrix_name = "alphabet"   
 
 with open(OUTPUT_FILE, "w") as f:
 

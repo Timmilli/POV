@@ -11,9 +11,9 @@ import os
 # === CONFIGURATION ===
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "converted_images")
-MATRIX_FILE = os.path.join(OUTPUT_DIR, "test.txt")
+MATRIX_FILE = os.path.join(OUTPUT_DIR, "1512_30.txt")
 NUM_LEDS = 16
-THETA_RES = 3  
+THETA_RES = 12
 
 # === LOAD MATRIX ===
 def load_matrix(file_path):
