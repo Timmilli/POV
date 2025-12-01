@@ -17,6 +17,7 @@ typedef enum {
   CHANGE_MODE_STD_CLOCK = 4, // switch to standard clock
   CHANGE_MODE_DIG_CLOCK = 5, // switch to digital clock
   CHANGE_MODE_IMAGE = 6,     // switch to image
+  ACCELERATING = 7,          // accelerate the clock by x100
 } process_action_e;
 
 /**
