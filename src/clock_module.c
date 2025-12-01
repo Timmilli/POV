@@ -17,9 +17,13 @@ void clock_init(clock_values_t *cv) {
   cv->last_update_time = 0UL;
 }
 
-uint8_t clock_elapse_time(clock_values_t *cv, int delta_us) {
+uint8_t clock_elapse_time(clock_values_t *cv, uint32_t delta_us,
+                          uint8_t accelerated) {
   uint8_t clock_updated = 0;
-  cv->us += delta_us;
+  if (accelerated)
+    cv->us += delta_us * 100;
+  else
+    cv->us += delta_us;
   if (cv->us >= 1000000UL) {
     cv->seconds += 1;
     clock_updated += 1;
@@ -45,10 +49,10 @@ uint8_t clock_elapse_time(clock_values_t *cv, int delta_us) {
 /**
  * Updates the clock, to now!
  */
-uint8_t clock_update(clock_values_t *cv) {
+uint8_t clock_update(clock_values_t *cv, uint8_t accelerated) {
   uint32_t current_time = micros();
   uint8_t clock_updated =
-      clock_elapse_time(cv, current_time - cv->last_update_time);
+      clock_elapse_time(cv, current_time - cv->last_update_time, accelerated);
   cv->last_update_time = current_time;
   return clock_updated;
 }
