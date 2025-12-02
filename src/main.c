@@ -120,7 +120,7 @@ int main(void) {
       // Setting another time
     case SET_HOUR: {
       ring_buffer_update_clock(&rx_buffer, &cv);
-      clock_updated = 1;
+      need_redraw = 1;
       // Feedback to the user
       clock_to_string(&cv, clock_format_str);
       uart_send_string("Clock set to: ", &tx_buffer);
