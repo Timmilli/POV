@@ -58,7 +58,7 @@
  */
 
 #ifndef NUMBER_OF_POSITIONS
-#define NUMBER_OF_POSITIONS 180
+#define NUMBER_OF_POSITIONS 30
 #endif
 
 /*

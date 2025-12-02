@@ -47,7 +47,7 @@ ISR(USART_UDRE_vect) {
     UDRIE_INTERRUPT_OFF;
 }
 
-display_mode_e current_mode = STD_CLOCK;
+display_mode_e current_mode = DIG_CLOCK;
 
 int main(void) {
   /*
